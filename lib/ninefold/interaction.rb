@@ -8,6 +8,8 @@ module Ninefold
     end
 
     def login
+      return @prefs["token"] if @prefs["token"]
+
       10.times do
         email    = @input.ask("Email: ")
         password = @input.ask("Password: ") { |q| q.echo = "*" }

@@ -103,4 +103,10 @@ describe "Ninefold::Interaction" do
 
     ui.login.should == nil
   end
+
+  it "pulls the information from the preferences if the token exists in the preferences" do
+    prefs["token"] = token
+
+    ui.login.should == token
+  end
 end
