@@ -1,13 +1,18 @@
 module Ninefold
   class User
-    attr_accessor :username, :token
+    attr_accessor :name, :token
 
-    def initialize(username=nil, token=nil)
-      @username, @token = username, token
+    def initialize(name=nil, token=nil)
+      @name, @token = name, token
     end
 
     def signed_in?
       !! @token
+    end
+
+    def signin(email, password)
+      # do stuff
+      []
     end
   end
 end

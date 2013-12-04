@@ -1,13 +1,17 @@
 require "thor"
 require "netrc"
-require "ninefold/user"
-require "ninefold/preferences"
+require "ninefold"
 
 module Ninefold
   class CLI < Thor
     desc "login", "Log in to Ninefold on this computer"
     def login
-      say "Signing you in...", :yellow
+      if user.signed_in?
+        say "Already signed in as #{user.name}\n", :magenta
+      else
+        say "Please, sign in\n", :magenta
+        interaction.signin
+      end
     end
 
     desc "console", "Run the rails console on your apps"
@@ -26,6 +30,10 @@ module Ninefold
 
     def prefs
       @prefs ||= Ninefold::Preferences.new({}, {}, {})
+    end
+
+    def interaction
+      @interaction = Ninefold::Interaction.new(self, self, user, prefs)
     end
 
   end

@@ -1,12 +1,12 @@
-require "ninefold/user"
+require "spec_helper"
 
 describe 'Ninefold::User' do
   let(:token) { SecureRandom.hex }
-  let(:user) { Ninefold::User.new('username', token) }
+  let(:user) { Ninefold::User.new('nikolay_the_osom', token) }
 
   context "#initialize" do
-    it "assigns the username" do
-      user.username.should == 'username'
+    it "assigns the name" do
+      user.name.should == 'nikolay_the_osom'
     end
 
     it "assigns the user token" do

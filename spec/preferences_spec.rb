@@ -1,4 +1,4 @@
-require "ninefold/preferences"
+require "spec_helper"
 
 describe "Ninefold::Preferences" do
   let(:local) { {} }

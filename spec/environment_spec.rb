@@ -1,4 +1,4 @@
-require "ninefold/environment"
+require "spec_helper"
 
 describe "Ninefold::Environment" do
   let(:env) { { "NINEFOLD_TOKEN" => "some-token" } }

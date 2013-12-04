@@ -7,25 +7,23 @@ module Ninefold
       @prefs  = prefs
     end
 
-    def login
-      return @prefs["token"] if @prefs["token"]
-
+    def signin
       10.times do
         email    = @input.ask("Email: ")
         password = @input.ask("Password: ") { |q| q.echo = "*" }
 
-        if token = @user.login(email, password)
-          @prefs[:token] = token
-          return token
+        username, token = @user.signin(email, password)
+
+        if username && token
+          @prefs[:username] = username
+          @prefs[:token]    = token
+          return
         end
 
         @output.say "Sorry. That email and password was invalid. Please try again", :red
       end
 
       @output.say "Could not log in", :red
-
-      # make sure to return nil for the token that couldn't be found
-      return
     end
   end
 end

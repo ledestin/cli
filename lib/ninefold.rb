@@ -1,4 +1,7 @@
 require "ninefold/version"
+require "ninefold/user"
+require "ninefold/environment"
+require "ninefold/preferences"
 require "ninefold/interaction"
 
 module Ninefold

@@ -36,7 +36,7 @@ module Ninefold
     end
 
     class User
-      def login(email, password)
+      def signin(email, password)
         return @token if @email == email && @password == password
       end
 
@@ -74,7 +74,7 @@ describe "Ninefold::Interaction" do
     input.on("Email: ") { "wycats@example.com" }
     input.on("Password: ") { "lol-e" }
 
-    ui.login
+    ui.signin
   end
 
   it "returns a token if the user enters a valid email and password" do
@@ -82,7 +82,9 @@ describe "Ninefold::Interaction" do
     input.on("Email: ") { "wycats@example.com" }
     input.on("Password: ") { "lol-e" }
 
-    ui.login.should == token
+    ui.signin
+
+    prefs[:token].should == token
   end
 
   it "tries multiple times if the wrong information is provided" do
@@ -93,7 +95,9 @@ describe "Ninefold::Interaction" do
     end
     input.on("Password: ") { "lol-e" }
 
-    ui.login.should == token
+    ui.signin
+
+    prefs[:token].should == token
   end
 
   it "fails if the wrong information is supplied 10 times" do
@@ -101,12 +105,16 @@ describe "Ninefold::Interaction" do
     input.on("Email: ") { |i| "nope@example.com" }
     input.on("Password: ") { "lol-e" }
 
-    ui.login.should == nil
+    ui.signin
+
+    prefs[:token].should == nil
   end
 
   it "pulls the information from the preferences if the token exists in the preferences" do
     prefs["token"] = token
 
-    ui.login.should == token
+    ui.signin
+
+    prefs[:token].should == token
   end
 end
