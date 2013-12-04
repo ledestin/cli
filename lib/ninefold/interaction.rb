@@ -7,23 +7,41 @@ module Ninefold
       @prefs  = prefs
     end
 
+    def say(*args)
+      @output.say *args
+    end
+
+    def ask(*args)
+      # a quick fix before Thor with STDOUT.noecho things get released
+      options = args.last.is_a?(Hash) ? args.last : {}
+      `stty -echo` if options[:echo] == false
+
+      result = @input.ask *args
+
+      `stty echo` && say("\n") if options[:echo] == false
+
+      result
+    end
+
     def signin
       10.times do
-        email    = @input.ask("Email: ")
-        password = @input.ask("Password: ") { |q| q.echo = "*" }
+        email    = ask("Email:", :cyan)
+        password = ask("Password:", :cyan, :echo => false)
 
         username, token = @user.signin(email, password)
 
         if username && token
           @prefs[:username] = username
           @prefs[:token]    = token
+
           return
         end
 
-        @output.say "Sorry. That email and password was invalid. Please try again", :red
+        say "\nSorry. That email and password was invalid. Please try again\n", :red
       end
 
-      @output.say "Could not log in", :red
+      say "\nCould not log in", :red
     end
   end
+
 end

@@ -7,7 +7,7 @@ module Ninefold
         @out = []
       end
 
-      def say(string, color)
+      def say(string, color=nil)
         @out << [string, color]
       end
     end
@@ -25,9 +25,9 @@ module Ninefold
         @questions[name] = block
       end
 
-      def ask(name, &block)
+      def ask(name, *args)
         if @questions.include?(name)
-          @asked << [name, block]
+          @asked << [name, args]
           @questions[name].call(@counts[name] += 1)
         else
           raise "The test tried to ask '#{name}' but you didn't handle it"
@@ -37,7 +37,7 @@ module Ninefold
 
     class User
       def signin(email, password)
-        return @token if @email == email && @password == password
+        return [@email, @token] if @email == email && @password == password
       end
 
       def valid_credentials(email, password, token)
@@ -71,16 +71,16 @@ describe "Ninefold::Interaction" do
   let(:token) { SecureRandom.hex }
 
   it "asks the user for an email and password" do
-    input.on("Email: ") { "wycats@example.com" }
-    input.on("Password: ") { "lol-e" }
+    input.on("Email:") { "wycats@example.com" }
+    input.on("Password:") { "lol-e" }
 
     ui.signin
   end
 
   it "returns a token if the user enters a valid email and password" do
     user.valid_credentials "wycats@example.com", "lol-e", token
-    input.on("Email: ") { "wycats@example.com" }
-    input.on("Password: ") { "lol-e" }
+    input.on("Email:") { "wycats@example.com" }
+    input.on("Password:") { "lol-e" }
 
     ui.signin
 
@@ -89,11 +89,11 @@ describe "Ninefold::Interaction" do
 
   it "tries multiple times if the wrong information is provided" do
     user.valid_credentials "wycats@example.com", "lol-e", token
-    input.on("Email: ") do |i|
+    input.on("Email:") do |i|
       next "wycats@example.com" if i == 9
       "nope@example.com"
     end
-    input.on("Password: ") { "lol-e" }
+    input.on("Password:") { "lol-e" }
 
     ui.signin
 
@@ -102,19 +102,11 @@ describe "Ninefold::Interaction" do
 
   it "fails if the wrong information is supplied 10 times" do
     user.valid_credentials "wycats@example.com", "lol-e", token
-    input.on("Email: ") { |i| "nope@example.com" }
-    input.on("Password: ") { "lol-e" }
+    input.on("Email:") { "nope@example.com" }
+    input.on("Password:") { "lol-e" }
 
     ui.signin
 
     prefs[:token].should == nil
-  end
-
-  it "pulls the information from the preferences if the token exists in the preferences" do
-    prefs["token"] = token
-
-    ui.signin
-
-    prefs[:token].should == token
   end
 end

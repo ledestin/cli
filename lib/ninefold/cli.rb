@@ -4,8 +4,8 @@ require "ninefold"
 
 module Ninefold
   class CLI < Thor
-    desc "login", "Log in to Ninefold on this computer"
-    def login
+    desc "signin", "Log in to Ninefold on this computer"
+    def signin
       if user.signed_in?
         say "Already signed in as #{user.name}\n", :magenta
       else
@@ -16,7 +16,7 @@ module Ninefold
 
     desc "console", "Run the rails console on your apps"
     def console
-      login if ! user.signed_in?
+      signin if ! user.signed_in?
     end
 
   private
