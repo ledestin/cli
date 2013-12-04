@@ -11,7 +11,7 @@ module Ninefold
     end
 
     def signin(email, password)
-      # do stuff
+      sleep 2 # do stuff
       []
     end
   end

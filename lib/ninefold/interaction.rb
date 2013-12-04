@@ -23,19 +23,31 @@ module Ninefold
       result
     end
 
+    def show_spinner
+      @brutus = Ninefold::Brutus.new
+    end
+
+    def hide_spinner
+      @brutus.hide
+    end
+
+    def with_spinner(&block)
+      show_spinner
+      yield
+      hide_spinner
+    end
+
     def signin
       10.times do
         email    = ask("Email:", :cyan)
         password = ask("Password:", :cyan, :echo => false)
+        tokens   = nil
 
-        username, token = @user.signin(email, password)
-
-        if username && token
-          @prefs[:username] = username
-          @prefs[:token]    = token
-
-          return
+        with_spinner do
+          tokens = @user.signin(email, password)
         end
+
+        return tokens if tokens
 
         say "\nSorry. That email and password was invalid. Please try again\n", :red
       end
