@@ -1,6 +1,4 @@
 require "thor"
-require "netrc"
-require "ninefold"
 
 module Ninefold
   class CLI < Thor
@@ -22,10 +20,7 @@ module Ninefold
   private
 
     def user
-      @user ||= begin
-        netrc = Netrc.read # (prefs['netrc_filename'])
-        Ninefold::User.new *netrc['portal.ninefold.com']
-      end
+      @user ||= Ninefold::User.for(prefs[:host])
     end
 
     def prefs

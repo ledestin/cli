@@ -12,7 +12,7 @@ module Ninefold
     end
 
     def ask(*args)
-      # a quick fix before Thor with STDOUT.noecho things get released
+      # a quick fix until Thor with STDOUT.noecho things get released
       options = args.last.is_a?(Hash) ? args.last : {}
       `stty -echo` if options[:echo] == false
 
@@ -24,11 +24,12 @@ module Ninefold
     end
 
     def show_spinner
-      @brutus = Ninefold::Brutus.new
+      @spinner ||= Ninefold::Brutus.new
+      @spinner.show
     end
 
     def hide_spinner
-      @brutus.hide
+      @spinner.hide
     end
 
     def with_spinner(&block)
@@ -44,12 +45,12 @@ module Ninefold
         tokens   = nil
 
         with_spinner do
-          tokens = @user.signin(email, password)
+          @user.signin(email, password)
         end
 
-        return tokens if tokens
+        return if @user.signed_in?
 
-        say "\nSorry. That email and password was invalid. Please try again\n", :red
+        say "\nSorry. That email and password was invalid. Please try again", :red
       end
 
       say "\nCould not log in", :red

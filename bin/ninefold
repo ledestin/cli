@@ -2,6 +2,6 @@
 
 $:.unshift File.expand_path("../../lib", __FILE__)
 
-require "ninefold/cli"
+require "ninefold"
 
 Ninefold::CLI.start

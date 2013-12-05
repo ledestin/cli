@@ -33,8 +33,18 @@ module Ninefold
       @munch_1 = sprite(1)
       @bites_0 = sprite(2)
       @bites_1 = sprite(3)
+    end
 
+    def show
       @spinner = Thread.new { chill }
+    end
+
+    def hide
+      return if ! @spinner
+      STDOUT.print "\r\u001b[#{height}A"
+      puts (" " * 40 + "\n") * height
+      STDOUT.print "\r\u001b[#{height}A"
+      @spinner.kill
     end
 
     def chill
@@ -49,13 +59,6 @@ module Ninefold
 
         sleep 0.5
       end
-    end
-
-    def hide
-      STDOUT.print "\r\u001b[#{height}A"
-      puts (" " * 40 + "\n") * height
-      STDOUT.print "\r\u001b[#{height}A"
-      @spinner.kill if @spinner
     end
 
   protected

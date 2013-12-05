@@ -1,5 +1,3 @@
-require "securerandom"
-
 module Ninefold
   module Spec
     class Output
@@ -37,13 +35,16 @@ module Ninefold
 
     class User
       def signin(email, password)
-        return [@email, @token] if @email == email && @password == password
+        @signed_in = @email == email && @password == password
       end
 
-      def valid_credentials(email, password, token)
+      def signed_in?
+        @signed_in
+      end
+
+      def valid_credentials(email, password)
         @email    = email
         @password = password
-        @token    = token
       end
     end
   end
@@ -68,8 +69,6 @@ describe "Ninefold::Interaction" do
     Ninefold::Interaction.new(output, input, user, prefs)
   end
 
-  let(:token) { SecureRandom.hex }
-
   it "asks the user for an email and password" do
     input.on("Email:") { "wycats@example.com" }
     input.on("Password:") { "lol-e" }
@@ -77,18 +76,18 @@ describe "Ninefold::Interaction" do
     ui.signin
   end
 
-  it "returns a token if the user enters a valid email and password" do
-    user.valid_credentials "wycats@example.com", "lol-e", token
+  it "signs the user in if he enters a valid email and password" do
+    user.valid_credentials "wycats@example.com", "lol-e"
     input.on("Email:") { "wycats@example.com" }
     input.on("Password:") { "lol-e" }
 
     ui.signin
 
-    prefs[:token].should == token
+    user.should be_signed_in
   end
 
   it "tries multiple times if the wrong information is provided" do
-    user.valid_credentials "wycats@example.com", "lol-e", token
+    user.valid_credentials "wycats@example.com", "lol-e"
     input.on("Email:") do |i|
       next "wycats@example.com" if i == 9
       "nope@example.com"
@@ -97,16 +96,16 @@ describe "Ninefold::Interaction" do
 
     ui.signin
 
-    prefs[:token].should == token
+    user.should be_signed_in
   end
 
   it "fails if the wrong information is supplied 10 times" do
-    user.valid_credentials "wycats@example.com", "lol-e", token
+    user.valid_credentials "wycats@example.com", "lol-e"
     input.on("Email:") { "nope@example.com" }
     input.on("Password:") { "lol-e" }
 
     ui.signin
 
-    prefs[:token].should == nil
+    user.should_not be_signed_in
   end
 end
