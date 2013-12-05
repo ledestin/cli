@@ -14,7 +14,7 @@ module Ninefold
 
     desc "console", "Run the rails console on your apps"
     def console
-      signin if ! user.signed_in?
+      signin unless user.signed_in?
     end
 
   private

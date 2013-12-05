@@ -1,66 +1,9 @@
 require "spec_helper"
 
 describe 'Ninefold::User' do
-  class BogusHost
-    attr_accessor :name
-
-    def initialize(name="bogus-host.ninefold.com")
-      @name = name
-    end
-
-    def post(path, options={})
-      find_response_for path, options
-    end
-
-    def find_response_for(path, options)
-      request = @requests.detect do |query|
-        query.path == path && query.options.to_s == options.to_s
-      end
-
-      raise "Expected a request to path: #{path}, params: #{options} " if ! request
-
-      Response.new(request)
-    end
-
-    def respond_to(path, options)
-      Query.new(path, options).tap do |query|
-        @requests ||= []
-        @requests << query
-      end
-    end
-
-    class Response
-      def initialize(query)
-        @query = query
-      end
-
-      def ok?
-        @query.status == :ok
-      end
-
-      def [](name)
-        @query.data[name]
-      end
-    end
-
-    class Query
-      attr_reader :path, :options, :status, :data
-
-      def initialize(path, options)
-        @path    = path
-        @options = options
-      end
-
-      def with(status, data)
-        @status = status
-        @data   = data
-      end
-    end
-  end
-
+  let(:host)  { BogusHost.new }
   let(:token) { SecureRandom.hex }
-  let(:host) { BogusHost.new }
-  let(:user) { Ninefold::User.new('nikolay', token, host) }
+  let(:user)  { Ninefold::User.new('nikolay', token, host) }
 
   context "#initialize" do
     it "assigns the name" do
@@ -77,6 +20,10 @@ describe 'Ninefold::User' do
   end
 
   context "#signed_in?" do
+    before do
+      user.verified = true
+    end
+
     it "returns true if the user has a security token" do
       user.token = token
       user.should be_signed_in
@@ -85,6 +32,38 @@ describe 'Ninefold::User' do
     it "returns false if there is no sicurity token" do
       user.token = nil
       user.should_not be_signed_in
+    end
+  end
+
+  context "#verify" do
+    context "token is valid on the server side" do
+      before do
+        host.respond_to("/tokens/verify", {token: token}).with(:ok, {})
+      end
+
+      it "returns 'true'" do
+        user.verify.should == true
+      end
+
+      it "marks the user as verified" do
+        user.verify
+        user.should be_verified
+      end
+    end
+
+    context "token is not valid anymore" do
+      before do
+        host.respond_to("/tokens/verify", {token: token}).with(:fail, {})
+      end
+
+      it "returns false" do
+        user.verify.should == false
+      end
+
+      it "doesn't make the user verified" do
+        user.verify
+        user.should_not be_verified
+      end
     end
   end
 
