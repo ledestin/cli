@@ -33,6 +33,8 @@ module Ninefold
       @munch_1 = sprite(1)
       @bites_0 = sprite(2)
       @bites_1 = sprite(3)
+
+      @sprites = [@munch_0, @munch_1, @munch_0, @munch_1, @bites_0, @bites_1]
     end
 
     def show
@@ -41,21 +43,25 @@ module Ninefold
 
     def hide
       return if ! @spinner
-      STDOUT.print "\r\u001b[#{height}A"
-      puts (" " * 40 + "\n") * height
-      STDOUT.print "\r\u001b[#{height}A"
       @spinner.kill
+
+      if @i != nil
+        STDOUT.print "\r\u001b[#{height}A"
+        puts (" " * 40 + "\n") * height
+        STDOUT.print "\r\u001b[#{height}A"
+        @i = nil
+      end
     end
 
     def chill
-      i = 0; steps = [@munch_0, @munch_1, @munch_0, @munch_1, @bites_0, @bites_1]
+      @i = 0;
 
       puts (" " * 40 + "\n") * height
 
       while true
-        i = 0 if ! steps[i]
+        @i = 0 if ! @sprites[@i]
 
-        print(steps[i]); i += 1
+        print(@sprites[@i]); @i += 1
 
         sleep 0.5
       end
@@ -69,7 +75,7 @@ module Ninefold
     end
 
     def height
-      @munch_0.split("\n").size
+      @sprites[0].split("\n").size
     end
 
     def sprite(id)

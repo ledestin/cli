@@ -6,12 +6,9 @@ module Ninefold
       @netrc ||= Netrc.read(* [@netrc_filename].compact )
     end
 
-    def self.for(host="portal.ninefold.com")
-      new *netrc[host], host
-    end
-
-    def self.host
-      @host
+    def self.for(host)
+      name, token = netrc[host.name]
+      new name, token, host
     end
 
     attr_accessor :name, :token, :host
@@ -25,11 +22,16 @@ module Ninefold
     end
 
     def signin(email, password)
-      sleep 2 # do stuff
-      []
+      response = host.post "/signin", {email: email, password: password}
+
+      if response.ok?
+        @name  = response[:name]
+        @token = response[:token]
+        save!
+      end
     end
 
-    def save
+    def save!
       return if ! @name || ! @token
 
       netrc = self.class.netrc

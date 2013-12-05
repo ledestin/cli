@@ -20,7 +20,11 @@ module Ninefold
   private
 
     def user
-      @user ||= Ninefold::User.for(prefs[:host])
+      @user ||= Ninefold::User.for(host)
+    end
+
+    def host
+      @host ||= Ninefold::Host.new(prefs[:host])
     end
 
     def prefs
