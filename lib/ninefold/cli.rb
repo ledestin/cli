@@ -1,7 +1,5 @@
-require "thor"
-
 module Ninefold
-  class CLI < Thor
+  class CLI < Ninefold::Command
     desc "signin", "Sign in to Ninefold on this computer"
     def signin
       if user.signed_in?
@@ -26,23 +24,7 @@ module Ninefold
       signin unless user.signed_in?
     end
 
-  private
-
-    def user
-      @user ||= Ninefold::User.for(host)
-    end
-
-    def host
-      @host ||= Ninefold::Host.new(prefs[:host])
-    end
-
-    def prefs
-      @prefs ||= Ninefold::Preferences.new({}, {}, {})
-    end
-
-    def interaction
-      @interaction = Ninefold::Interaction.new(self, self, user, prefs)
-    end
-
+    desc "keys SUBCOMMAND ... ARGS", "manage your SSH keys"
+    subcommand "keys", Ninefold::Command::Keys
   end
 end
