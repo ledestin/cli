@@ -11,18 +11,9 @@ Ninefold::User.instance_eval do
   @netrc_filename = "/tmp/ninefold-cli-test.netrc"
 end
 
-class BogusHost
-  attr_accessor :name
+class Ninefold::Host
 
-  def initialize(name="bogus-host.ninefold.com")
-    @name = name
-  end
-
-  def get(path, options={})
-    find_response_for path, options
-  end
-
-  def post(path, options={})
+  def request(method, path, options={})
     find_response_for path, options
   end
 
@@ -43,20 +34,6 @@ class BogusHost
     end
   end
 
-  class Response
-    def initialize(query)
-      @query = query
-    end
-
-    def ok?
-      @query.status == :ok
-    end
-
-    def [](name)
-      @query.data[name]
-    end
-  end
-
   class Query
     attr_reader :path, :options, :status, :data
 
@@ -68,6 +45,14 @@ class BogusHost
     def with(status, data)
       @status = status
       @data   = data
+    end
+
+    def success?
+      @status == :ok
+    end
+
+    def body
+      @data.to_json
     end
   end
 end

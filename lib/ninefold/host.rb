@@ -1,43 +1,58 @@
+require "json"
+require "faraday"
+
 module Ninefold
   class Host
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
 
-    attr_reader :name
+    attr_accessor :name, :token
 
     def initialize(name=DEFAULT_NAME, version=API_VERSION)
       @name, @version = name, version
+      @http = Faraday.new(url: "https://#{@name}")
     end
 
     def get(path, options={})
-      Response.new
+      request :get, path, options
     end
 
     def post(path, options={})
-      sleep 4
-      Response.new
+      request :post, path, options
     end
 
     def put(path, options={})
-      Response.new
+      request :put, path, options
     end
 
     def patch(path, options={})
-      Response.new
+      request :patch, path, options
     end
 
     def delete(path, options={})
-      Response.new
+      request :delete, path, options
+    end
+
+    def request(method, path, params)
+      result = @conn.__send__ method, "/api/#{@version}#{path}", params do |req|
+        req.headers['Authorization'] = @token if @token
+      end
+
+      Response.new(result)
     end
 
     class Response
-      def initialize
+      def initialize(http_response)
+        @ok   = http_response.success?
+        @data = JSON.parse(http_response.body) rescue {}
       end
 
       def ok?
+        @ok
       end
 
       def [](key)
+        @data[key.to_s]
       end
     end
   end

@@ -1,8 +1,9 @@
 require "spec_helper"
 
 describe 'Ninefold::User' do
-  let(:host)  { BogusHost.new }
+
   let(:token) { SecureRandom.hex }
+  let(:host)  { Ninefold::Host.new }
   let(:user)  { Ninefold::User.new('nikolay', token, host) }
 
   context "#initialize" do
@@ -130,8 +131,8 @@ describe 'Ninefold::User' do
     let(:netrc) { Ninefold::User.netrc }
 
     context ".for" do
-      let(:existing_host)     { BogusHost.new('existing.host.com')     }
-      let(:non_existing_host) { BogusHost.new('non-existing.host.com') }
+      let(:existing_host)     { Ninefold::Host.new('existing.host.com')     }
+      let(:non_existing_host) { Ninefold::Host.new('non-existing.host.com') }
 
       before do
         netrc[existing_host.name] = 'nikolay', token
