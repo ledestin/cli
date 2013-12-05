@@ -46,9 +46,10 @@ module Ninefold
       @spinner.kill
 
       if @i != nil
-        STDOUT.print "\r\u001b[#{height}A"
-        puts (" " * 40 + "\n") * height
-        STDOUT.print "\r\u001b[#{height}A"
+        move_caret_back
+        print_blank_canvas
+        move_caret_back
+
         @i = nil
       end
     end
@@ -56,7 +57,7 @@ module Ninefold
     def chill
       @i = 0;
 
-      puts (" " * 40 + "\n") * height
+      print_blank_canvas
 
       while true
         @i = 0 if ! @sprites[@i]
@@ -70,8 +71,16 @@ module Ninefold
   protected
 
     def print(sprite)
-      STDOUT.print "\r\u001b[#{height}A"
+      move_caret_back
       STDOUT.print sprite
+    end
+
+    def print_blank_canvas
+      STDOUT.print (" " * 40 + "\n") * height
+    end
+
+    def move_caret_back
+      STDOUT.print "\r\u001b[#{height}A"
     end
 
     def height
@@ -81,7 +90,7 @@ module Ninefold
     def sprite(id)
       text   = SPRITES[id].gsub(/\A[ \t]*\n/, '').gsub(/\n[ \t]*\Z/, '')
       indent = text.scan(/^[ \t]*(?=\S)/).min.size || 0
-      text.gsub(/^[ \t]{#{indent - 1}}/, '').gsub("\n", " " * 40 + "\n")
+      text.gsub(/^[ \t]{#{indent - 2}}/, '').gsub("\n", " " * 40 + "\n")
     end
   end
 end
