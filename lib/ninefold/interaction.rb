@@ -40,17 +40,16 @@ module Ninefold
 
     def signin
       10.times do
-        email    = ask("Email:", :cyan)
+        username = ask("Username:", :cyan)
         password = ask("Password:", :cyan, :echo => false)
-        tokens   = nil
 
         with_spinner do
-          @user.signin(email, password)
+          @user.signin(username, password)
         end
 
         return if @user.signed_in?
 
-        say "\nSorry. That email and password was invalid. Please try again", :red
+        say "\nSorry. That username and password was invalid. Please try again", :red
       end
 
       say "\nCould not log in", :red

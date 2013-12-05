@@ -34,16 +34,16 @@ module Ninefold
     end
 
     class User
-      def signin(email, password)
-        @signed_in = @email == email && @password == password
+      def signin(username, password)
+        @signed_in = @username == username && @password == password
       end
 
       def signed_in?
         @signed_in
       end
 
-      def valid_credentials(email, password)
-        @email    = email
+      def valid_credentials(username, password)
+        @username = username
         @password = password
       end
     end
@@ -69,16 +69,16 @@ describe "Ninefold::Interaction" do
     Ninefold::Interaction.new(output, input, user, prefs)
   end
 
-  it "asks the user for an email and password" do
-    input.on("Email:") { "wycats@example.com" }
+  it "asks the user for an username and password" do
+    input.on("Username:") { "wycats@example.com" }
     input.on("Password:") { "lol-e" }
 
     ui.signin
   end
 
-  it "signs the user in if he enters a valid email and password" do
+  it "signs the user in if he enters a valid username and password" do
     user.valid_credentials "wycats@example.com", "lol-e"
-    input.on("Email:") { "wycats@example.com" }
+    input.on("Username:") { "wycats@example.com" }
     input.on("Password:") { "lol-e" }
 
     ui.signin
@@ -88,7 +88,7 @@ describe "Ninefold::Interaction" do
 
   it "tries multiple times if the wrong information is provided" do
     user.valid_credentials "wycats@example.com", "lol-e"
-    input.on("Email:") do |i|
+    input.on("Username:") do |i|
       next "wycats@example.com" if i == 9
       "nope@example.com"
     end
@@ -101,7 +101,7 @@ describe "Ninefold::Interaction" do
 
   it "fails if the wrong information is supplied 10 times" do
     user.valid_credentials "wycats@example.com", "lol-e"
-    input.on("Email:") { "nope@example.com" }
+    input.on("Username:") { "nope@example.com" }
     input.on("Password:") { "lol-e" }
 
     ui.signin

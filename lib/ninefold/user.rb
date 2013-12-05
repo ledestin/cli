@@ -21,21 +21,21 @@ module Ninefold
       !! @token
     end
 
-    def signin(email, password)
-      response = host.post "/signin", {email: email, password: password}
+    def signin(username, password)
+      response = host.post "/tokens", {username: username, password: password}
 
       if response.ok?
-        @name  = response[:name]
+        @name  = username
         @token = response[:token]
-        save!
+        save
       end
     end
 
-    def save!
+    def save
       return if ! @name || ! @token
 
       netrc = self.class.netrc
-      netrc[@host] = @name, @token
+      netrc[@host.name] = @name, @token
       netrc.save
     end
   end

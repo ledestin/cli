@@ -1,11 +1,12 @@
 module Ninefold
   class Host
     DEFAULT_NAME = "portal.ninefold.com"
+    API_VERSION  = "v1"
 
     attr_reader :name
 
-    def initialize(name=DEFAULT_NAME)
-      @name = name
+    def initialize(name=DEFAULT_NAME, version=API_VERSION)
+      @name, @version = name, version
     end
 
     def get(path, options={})
@@ -13,7 +14,7 @@ module Ninefold
     end
 
     def post(path, options={})
-      sleep 1
+      sleep 4
       Response.new
     end
 
