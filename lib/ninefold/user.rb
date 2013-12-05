@@ -38,5 +38,9 @@ module Ninefold
       netrc[@host.name] = @name, @token
       netrc.save
     end
+
+    def delete
+      self.class.netrc.delete @host.name
+    end
   end
 end

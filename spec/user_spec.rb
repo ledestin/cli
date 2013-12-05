@@ -202,5 +202,17 @@ describe 'Ninefold::User' do
         user.save
       end
     end
+
+    context "#delete" do
+      before do
+        netrc[host.name] = 'nikolay', token
+        netrc.save
+      end
+
+      it "removes the data from the netrc entry" do
+        user.delete
+        netrc[host.name].should be_nil
+      end
+    end
   end
 end
