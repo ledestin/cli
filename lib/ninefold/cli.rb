@@ -2,13 +2,22 @@ require "thor"
 
 module Ninefold
   class CLI < Thor
-    desc "signin", "Log in to Ninefold on this computer"
+    desc "signin", "Sign in to Ninefold on this computer"
     def signin
       if user.signed_in?
         say "Already signed in as #{user.name}\n", :magenta
       else
         say "Please, sign in\n", :magenta
         interaction.signin
+      end
+    end
+
+    desc "signout", "Sign out from Ninefold on this computer"
+    def signout
+      if user.signed_in?
+        interaction.signout
+      else
+        say "Not signed in yet", :magenta
       end
     end
 

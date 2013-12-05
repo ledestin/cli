@@ -31,6 +31,14 @@ module Ninefold
           raise "The test tried to ask '#{name}' but you didn't handle it"
         end
       end
+
+      def yes?(name, *args)
+        if @questions.include?(name)
+          @questions[name].call == 'y'
+        else
+          raise "The test tried to ask '#{name}' but you didn't handle it"
+        end
+      end
     end
 
     class User
@@ -40,6 +48,9 @@ module Ninefold
 
       def signed_in?
         @signed_in
+      end
+
+      def delete
       end
 
       def valid_credentials(username, password)
@@ -69,43 +80,64 @@ describe "Ninefold::Interaction" do
     Ninefold::Interaction.new(output, input, user, prefs)
   end
 
-  it "asks the user for an username and password" do
-    input.on("Username:") { "wycats@example.com" }
-    input.on("Password:") { "lol-e" }
+  context "signin" do
+    it "asks the user for an username and password" do
+      input.on("Username:") { "wycats@example.com" }
+      input.on("Password:") { "lol-e" }
 
-    ui.signin
-  end
-
-  it "signs the user in if he enters a valid username and password" do
-    user.valid_credentials "wycats@example.com", "lol-e"
-    input.on("Username:") { "wycats@example.com" }
-    input.on("Password:") { "lol-e" }
-
-    ui.signin
-
-    user.should be_signed_in
-  end
-
-  it "tries multiple times if the wrong information is provided" do
-    user.valid_credentials "wycats@example.com", "lol-e"
-    input.on("Username:") do |i|
-      next "wycats@example.com" if i == 9
-      "nope@example.com"
+      ui.signin
     end
-    input.on("Password:") { "lol-e" }
 
-    ui.signin
+    it "signs the user in if he enters a valid username and password" do
+      user.valid_credentials "wycats@example.com", "lol-e"
+      input.on("Username:") { "wycats@example.com" }
+      input.on("Password:") { "lol-e" }
 
-    user.should be_signed_in
+      ui.signin
+
+      user.should be_signed_in
+    end
+
+    it "tries multiple times if the wrong information is provided" do
+      user.valid_credentials "wycats@example.com", "lol-e"
+      input.on("Username:") do |i|
+        next "wycats@example.com" if i == 9
+        "nope@example.com"
+      end
+      input.on("Password:") { "lol-e" }
+
+      ui.signin
+
+      user.should be_signed_in
+    end
+
+    it "fails if the wrong information is supplied 10 times" do
+      user.valid_credentials "wycats@example.com", "lol-e"
+      input.on("Username:") { "nope@example.com" }
+      input.on("Password:") { "lol-e" }
+
+      ui.signin
+
+      user.should_not be_signed_in
+    end
   end
 
-  it "fails if the wrong information is supplied 10 times" do
-    user.valid_credentials "wycats@example.com", "lol-e"
-    input.on("Username:") { "nope@example.com" }
-    input.on("Password:") { "lol-e" }
+  context "signout" do
+    it "deletes the user credentials if the user says 'y'" do
+      input.on("Are you sure?") { "y" }
 
-    ui.signin
+      user.should_receive(:delete)
 
-    user.should_not be_signed_in
+      ui.signout
+    end
+
+    it "doesn't touch the user if he said nope" do
+      input.on("Are you sure?") { "nope" }
+
+      user.should_not_receive(:delete)
+
+      ui.signout
+    end
   end
+
 end

@@ -11,16 +11,27 @@ module Ninefold
       @output.say *args
     end
 
-    def ask(*args)
+    def ask(label, options={})
       # a quick fix until Thor with STDOUT.noecho things get released
-      options = args.last.is_a?(Hash) ? args.last : {}
       `stty -echo` if options[:echo] == false
 
-      result = @input.ask *args
+      result = @input.ask label, :cyan, options
 
       `stty echo` && say("\n") if options[:echo] == false
 
       result
+    end
+
+    def error(msg)
+      say msg, :red
+    end
+
+    def confirm(msg)
+      @input.yes?(msg, :cyan)
+    end
+
+    def done
+      say "✔︎  Done", :green
     end
 
     def show_spinner
@@ -40,19 +51,26 @@ module Ninefold
 
     def signin
       10.times do
-        username = ask("Username:", :cyan)
-        password = ask("Password:", :cyan, :echo => false)
+        username = ask("Username:")
+        password = ask("Password:", :echo => false)
 
         with_spinner do
           @user.signin(username, password)
         end
 
-        return if @user.signed_in?
+        return done if @user.signed_in?
 
-        say "\nSorry. That username and password was invalid. Please try again", :red
+        error "\nSorry. That username and password was invalid. Please try again"
       end
 
-      say "\nCould not log in", :red
+      error "\nCould not log in"
+    end
+
+    def signout
+      if confirm("Are you sure?")
+        @user.delete
+        done
+      end
     end
   end
 
