@@ -21,10 +21,6 @@ describe 'Ninefold::User' do
   end
 
   context "#signed_in?" do
-    before do
-      user.verified = true
-    end
-
     it "returns true if the user has a security token" do
       user.token = token
       user.should be_signed_in
@@ -33,38 +29,6 @@ describe 'Ninefold::User' do
     it "returns false if there is no sicurity token" do
       user.token = nil
       user.should_not be_signed_in
-    end
-  end
-
-  context "#verify" do
-    context "token is valid on the server side" do
-      before do
-        host.respond_to("/tokens/verify", {token: token}).with(:ok, {})
-      end
-
-      it "returns 'true'" do
-        user.verify.should == true
-      end
-
-      it "marks the user as verified" do
-        user.verify
-        user.should be_verified
-      end
-    end
-
-    context "token is not valid anymore" do
-      before do
-        host.respond_to("/tokens/verify", {token: token}).with(:fail, {})
-      end
-
-      it "returns false" do
-        user.verify.should == false
-      end
-
-      it "doesn't make the user verified" do
-        user.verify
-        user.should_not be_verified
-      end
     end
   end
 

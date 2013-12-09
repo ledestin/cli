@@ -13,6 +13,8 @@ module Ninefold
       end
     end
 
+    class AccessDenied < StandardError; end
+
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
 
@@ -48,7 +50,9 @@ module Ninefold
         req.headers['Authorization'] = @token if @token
       end
 
-      Response.new(result)
+      Response.new(result).tap do |response|
+        raise AccessDenied if result.status == 403
+      end
     end
 
     class Response
