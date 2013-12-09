@@ -3,6 +3,16 @@ require "faraday"
 
 module Ninefold
   class Host
+    def self.inst
+      @inst ||= new(Ninefold::Preferences[:host])
+    end
+
+    module Access
+      def host
+        @host ||= Ninefold::Host.inst
+      end
+    end
+
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
 
@@ -10,7 +20,7 @@ module Ninefold
 
     def initialize(name=DEFAULT_NAME, version=API_VERSION)
       @name, @version = name, version
-      @http = Faraday.new(url: "https://#{@name}")
+      @conn = Faraday.new(url: "https://#{@name}")
     end
 
     def get(path, options={})

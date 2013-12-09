@@ -2,19 +2,21 @@ require "netrc"
 
 module Ninefold
   class User
+    include Ninefold::Host::Access
+
     def self.netrc
       @netrc ||= Netrc.read(* [@netrc_filename].compact )
     end
 
-    def self.for(host)
-      name, token = netrc[host.name]
-      new name, token, host
+    def self.for(host_name)
+      name, token = netrc[host_name]
+      new name, token
     end
 
-    attr_accessor :name, :token, :host, :verified
+    attr_accessor :name, :token, :verified
 
-    def initialize(name=nil, token=nil, host=nil)
-      @name, @token, @host = name, token, host
+    def initialize(name=nil, token=nil)
+      @name, @token = name, token
     end
 
     def signed_in?
@@ -52,12 +54,12 @@ module Ninefold
       return if ! @name || ! @token
 
       netrc = self.class.netrc
-      netrc[@host.name] = @name, @token
+      netrc[host.name] = @name, @token
       netrc.save
     end
 
     def delete
-      self.class.netrc.delete @host.name
+      self.class.netrc.delete host.name
     end
   end
 end

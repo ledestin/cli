@@ -9,6 +9,18 @@ describe "Ninefold::Host" do
     end
   end
 
+  context "#request" do
+    let(:response) { host.request(:get, "/path") }
+
+    before do
+      host.respond_to("/path", {}).with(:ok, {})
+    end
+
+    it "returns an Ninefold::Host::Response object" do
+      response.should be_a(Ninefold::Host::Response)
+    end
+  end
+
   describe "Ninefold::Host::Response" do
     let(:http_response) { double("Response", :success? => true, :body => "{}") }
     let(:response) { Ninefold::Host::Response.new(http_response) }

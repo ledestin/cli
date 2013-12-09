@@ -7,6 +7,12 @@ module Ninefold
   # * a local file
   # * a global file
   class Preferences
+    def self.[](key)
+      @inst ||= new({}, {}, {})
+      @inst[key]
+    end
+
+
     # `pwd` and `home` must be Paths:
     #
     # * join: return a new Path relative to the path root

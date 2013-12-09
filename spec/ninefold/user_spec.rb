@@ -4,7 +4,11 @@ describe 'Ninefold::User' do
 
   let(:token) { SecureRandom.hex }
   let(:host)  { Ninefold::Host.new }
-  let(:user)  { Ninefold::User.new('nikolay', token, host) }
+  let(:user)  { Ninefold::User.new('nikolay', token) }
+
+  before do
+    user.stub :host => host
+  end
 
   context "#initialize" do
     it "assigns the name" do
@@ -13,10 +17,6 @@ describe 'Ninefold::User' do
 
     it "assigns the user token" do
       user.token.should == token
-    end
-
-    it "assigns the host" do
-      user.host.should == host
     end
   end
 
@@ -131,28 +131,28 @@ describe 'Ninefold::User' do
     let(:netrc) { Ninefold::User.netrc }
 
     context ".for" do
-      let(:existing_host)     { Ninefold::Host.new('existing.host.com')     }
-      let(:non_existing_host) { Ninefold::Host.new('non-existing.host.com') }
+      let(:existing_host)     { 'existing.host.com'     }
+      let(:non_existing_host) { 'non-existing.host.com' }
 
       before do
-        netrc[existing_host.name] = 'nikolay', token
+        netrc[existing_host] = 'nikolay', token
         netrc.save
       end
 
       context "with existing host" do
-        subject(:user) { Ninefold::User.for(existing_host) }
+        before{ @user = Ninefold::User.for(existing_host) }
 
-        it { should be_a(Ninefold::User) }
-        it { user.name.should == 'nikolay' }
-        it { user.token.should == token }
+        it { @user.should be_a(Ninefold::User) }
+        it { @user.name.should == 'nikolay' }
+        it { @user.token.should == token }
       end
 
       context "with non-existing host" do
-        subject(:user) { Ninefold::User.for(non_existing_host) }
+        before{ @user = Ninefold::User.for(non_existing_host) }
 
-        it { should be_a(Ninefold::User) }
-        it { user.name.should be_nil }
-        it { user.token.should be_nil }
+        it { @user.should be_a(Ninefold::User) }
+        it { @user.name.should be_nil }
+        it { @user.token.should be_nil }
       end
     end
 

@@ -18,11 +18,11 @@ class Ninefold::Host
   end
 
   def find_response_for(path, options)
-    request = @requests.detect do |query|
+    request = (@requests || []).detect do |query|
       query.path == path && query.options.to_s == options.to_s
     end
 
-    raise "Expected a request to path: #{path}, params: #{options} " if ! request
+    raise "Unexpected a request to path: #{path}, params: #{options} " if ! request
 
     Response.new(request)
   end
