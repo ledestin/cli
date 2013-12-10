@@ -26,27 +26,27 @@ module Ninefold
       @conn = Faraday.new(url: "#{@name.slice(0,9)=="localhost" ? "http" : "https"}://#{@name}")
     end
 
-    def get(path, options={})
-      request :get, path, options
+    def get(path, options={}, &block)
+      request :get, path, options, &block
     end
 
-    def post(path, options={})
-      request :post, path, options
+    def post(path, options={}, &block)
+      request :post, path, options, &block
     end
 
-    def put(path, options={})
-      request :put, path, options
+    def put(path, options={}, &block)
+      request :put, path, options, &block
     end
 
-    def patch(path, options={})
-      request :patch, path, options
+    def patch(path, options={}, &block)
+      request :patch, path, options, &block
     end
 
-    def delete(path, options={})
-      request :delete, path, options
+    def delete(path, options={}, &block)
+      request :delete, path, options, &block
     end
 
-    def request(method, path, params)
+    def request(method, path, params, &block)
       result = @conn.__send__ method, "/api/#{@version}#{path}", params do |req|
         req.headers['Authorization'] = @token if @token
       end
@@ -54,7 +54,9 @@ module Ninefold
       raise AccessDenied if result.status == 403
       raise Unreachable  if result.status  > 403
 
-      Response.new(result)
+      Response.new(result).tap do |response|
+        block.call(response) if block_given?
+      end
     end
 
     class Response

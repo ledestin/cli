@@ -19,6 +19,15 @@ module Ninefold
       end
     end
 
+    desc "whoami", "Print info about the current user"
+    def whoami
+      if user.signed_in?
+        title "You're signed in as: #{user.name}"
+      else
+        title "You're not signed in"
+      end
+    end
+
     desc "console", "Run the rails console on your apps"
     def console
       signin unless user.signed_in?
@@ -26,5 +35,8 @@ module Ninefold
 
     desc "keys SUBCOMMAND ... ARGS", "manage your SSH keys"
     subcommand "keys", Ninefold::Command::Keys
+
+    desc "apps SUBCOMMAND ... ARGS", "manage your apps"
+    subcommand "apps", Ninefold::Command::Apps
   end
 end

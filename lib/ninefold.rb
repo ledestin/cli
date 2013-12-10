@@ -10,6 +10,7 @@ require "ninefold/interactions/signin"
 require "ninefold/interactions/signout"
 require "ninefold/command"
 require "ninefold/commands/keys"
+require "ninefold/commands/apps"
 require "ninefold/cli"
 
 module Ninefold
