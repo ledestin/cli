@@ -36,6 +36,7 @@ module Ninefold
     desc "console", "Run the rails console on your apps"
     def console
       signin unless user.signed_in?
+      interaction(:pickapp)
     end
 
     desc "keys SUBCOMMAND ... ARGS", "manage your SSH keys"

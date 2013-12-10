@@ -27,5 +27,9 @@ module Ninefold
     def repo
       @options[:repo]
     end
+
+    def to_s
+      name
+    end
   end
 end
