@@ -6,7 +6,7 @@ require 'ninefold/version'
 Gem::Specification.new do |spec|
   spec.name          = "ninefold"
   spec.version       = Ninefold::VERSION
-  spec.authors       = ["Yehuda Katz"]
+  spec.authors       = ["Yehuda Katz", "Nikolay Nemshilov"]
   spec.email         = ["wycats@gmail.com"]
   spec.description   = %q{TODO: Write a gem description}
   spec.summary       = %q{TODO: Write a gem summary}
