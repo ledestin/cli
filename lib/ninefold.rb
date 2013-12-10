@@ -7,6 +7,7 @@ require "ninefold/models/user"
 require "ninefold/interaction"
 require "ninefold/command"
 require "ninefold/command/keys"
+require "ninefold/services/token"
 require "ninefold/cli"
 
 module Ninefold

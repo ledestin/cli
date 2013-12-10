@@ -6,15 +6,11 @@ module Ninefold
   private
 
     def user
-      @user ||= Ninefold::User.for(prefs[:host])
-    end
-
-    def prefs
-      Ninefold::Preferences
+      @user ||= Ninefold::User.find
     end
 
     def interaction
-      @interaction = Ninefold::Interaction.new(self, self, user, prefs)
+      @interaction = Ninefold::Interaction.new(self, self, user, Ninefold::Preferences)
     end
   end
 end

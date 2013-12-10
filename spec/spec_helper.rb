@@ -7,8 +7,10 @@ class Ninefold::Brutus
   end
 end
 
-Ninefold::User.instance_eval do
-  @netrc_filename = "/tmp/ninefold-cli-test.netrc"
+Ninefold::Token.instance_eval do
+  def file
+    "/tmp/ninefold-cli-test.netrc"
+  end
 end
 
 class Ninefold::Host

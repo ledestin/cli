@@ -92,27 +92,26 @@ describe 'Ninefold::User' do
   end
 
   context "Netrc interactions" do
-    let(:netrc) { Ninefold::User.netrc }
+    let(:token_store) { Ninefold::Token }
 
-    context ".for" do
-      let(:existing_host)     { 'existing.host.com'     }
-      let(:non_existing_host) { 'non-existing.host.com' }
+    context ".find" do
 
-      before do
-        netrc[existing_host] = 'nikolay', token
-        netrc.save
-      end
-
-      context "with existing host" do
-        before{ @user = Ninefold::User.for(existing_host) }
+      context "with existing token" do
+        before do
+          token_store.stub(:find => ['nikolay', token])
+          @user = Ninefold::User.find
+        end
 
         it { @user.should be_a(Ninefold::User) }
         it { @user.name.should == 'nikolay' }
         it { @user.token.should == token }
       end
 
-      context "with non-existing host" do
-        before{ @user = Ninefold::User.for(non_existing_host) }
+      context "with missing token" do
+        before do
+          token_store.stub(:find => nil)
+          @user = Ninefold::User.find
+        end
 
         it { @user.should be_a(Ninefold::User) }
         it { @user.name.should be_nil }
@@ -121,41 +120,16 @@ describe 'Ninefold::User' do
     end
 
     context "#save" do
-      before do
-        netrc.delete host.name
-
-        user.name  = 'nikolay'
-        user.token = token
-      end
-
       it "saves the netrc data when there is a username and a token" do
-        netrc.should_receive(:save)
-        user.save
-        netrc[host.name].should == ['nikolay', token]
-      end
-
-      it "does nothing when a username is missing" do
-        user.name = nil
-        netrc.should_not_receive(:save)
-        user.save
-      end
-
-      it "does nothing when a token is missing" do
-        user.token = nil
-        netrc.should_not_receive(:save)
+        token_store.should_receive(:save).with('nikolay', token)
         user.save
       end
     end
 
     context "#delete" do
-      before do
-        netrc[host.name] = 'nikolay', token
-        netrc.save
-      end
-
       it "removes the data from the netrc entry" do
+        token_store.should_receive(:clear)
         user.delete
-        netrc[host.name].should be_nil
       end
     end
   end

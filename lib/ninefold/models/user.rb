@@ -1,15 +1,9 @@
-require "netrc"
-
 module Ninefold
   class User
     include Ninefold::Host::Access
 
-    def self.netrc
-      @netrc ||= Netrc.read(* [@netrc_filename].compact )
-    end
-
-    def self.for(host_name)
-      name, token = netrc[host_name]
+    def self.find(host_name=nil)
+      name, token = Ninefold::Token.find(host_name)
       new name, token
     end
 
@@ -34,15 +28,11 @@ module Ninefold
     end
 
     def save
-      return if ! @name || ! @token
-
-      netrc = self.class.netrc
-      netrc[host.name] = @name, @token
-      netrc.save
+      Ninefold::Token.save @name, @token
     end
 
     def delete
-      self.class.netrc.delete host.name
+      Ninefold::Token.clear
     end
   end
 end
