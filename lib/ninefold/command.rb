@@ -3,10 +3,14 @@ require "thor"
 module Ninefold
   class Command < Thor
 
-  private
+  protected
 
     def title(text)
       say "#{text}\n", :magenta
+    end
+
+    def error(text)
+      say "ERROR: #{text}", :red
     end
 
     def user
@@ -16,7 +20,7 @@ module Ninefold
     def interaction(name)
       Ninefold::Interaction.const_get(name.to_s.capitalize)
         .new(self, self, user, Ninefold::Preferences)
-        .run
+        .start
     end
   end
 end

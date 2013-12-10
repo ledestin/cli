@@ -7,8 +7,16 @@ module Ninefold
   # * a local file
   # * a global file
   class Preferences
+    def self.defaults
+      dev_env = File.exists?("#{Dir.pwd}/ninefold.gemspec")
+
+      {
+        host: dev_env ? "localhost:3000" : "portal.ninefold.com"
+      }
+    end
+
     def self.[](key)
-      @inst ||= new({}, {}, {})
+      @inst ||= new({}, defaults, Ninefold::Environment.new('NINEFOLD'))
       @inst[key]
     end
 

@@ -14,6 +14,7 @@ module Ninefold
     end
 
     class AccessDenied < StandardError; end
+    class Unreachable  < StandardError; end
 
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
@@ -22,7 +23,7 @@ module Ninefold
 
     def initialize(name=DEFAULT_NAME, version=API_VERSION)
       @name, @version = name, version
-      @conn = Faraday.new(url: "https://#{@name}")
+      @conn = Faraday.new(url: "#{@name.slice(0,9)=="localhost" ? "http" : "https"}://#{@name}")
     end
 
     def get(path, options={})
@@ -50,9 +51,10 @@ module Ninefold
         req.headers['Authorization'] = @token if @token
       end
 
-      Response.new(result).tap do |response|
-        raise AccessDenied if result.status == 403
-      end
+      raise AccessDenied if result.status == 403
+      raise Unreachable  if result.status  > 403
+
+      Response.new(result)
     end
 
     class Response

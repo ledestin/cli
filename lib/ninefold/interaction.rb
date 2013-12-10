@@ -7,6 +7,14 @@ module Ninefold
       @prefs  = prefs
     end
 
+    def start
+      run
+    rescue Ninefold::Host::AccessDenied => e
+      error "Access denied"
+    rescue Ninefold::Host::Unreachable => e
+      error "Could not reach the host"
+    end
+
     def run
       raise NotImplementedError
     end
@@ -27,7 +35,8 @@ module Ninefold
     end
 
     def error(msg)
-      say msg, :red
+      hide_spinner
+      say "\nERROR: #{msg}", :red
     end
 
     def confirm(msg)
@@ -44,7 +53,7 @@ module Ninefold
     end
 
     def hide_spinner
-      @spinner.hide
+      @spinner.hide if @spinner
     end
 
     def with_spinner(&block)
