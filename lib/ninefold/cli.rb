@@ -28,21 +28,19 @@ module Ninefold
       end
     end
 
-    desc "brutus", "Make the bruts say stuff"
-    def brutus(*args)
-      bsay args.join(" ")
-    end
-
     desc "console", "Run the rails console on your apps"
     def console
       signin unless user.signed_in?
       interaction(:pickapp)
     end
 
-    desc "keys SUBCOMMAND ... ARGS", "manage your SSH keys"
+    desc "keys SUBCOMMAND", "manage your SSH keys"
     subcommand "keys", Ninefold::Command::Keys
 
-    desc "apps SUBCOMMAND ... ARGS", "manage your apps"
+    desc "apps SUBCOMMAND", "manage your apps"
     subcommand "apps", Ninefold::Command::Apps
+
+    desc "brutus SUBCOMMAND", "make Brutus do things"
+    subcommand "brutus", Ninefold::Command::Brutus
   end
 end

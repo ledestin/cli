@@ -13,6 +13,7 @@ require "ninefold/interactions/pickapp"
 require "ninefold/command"
 require "ninefold/commands/keys"
 require "ninefold/commands/apps"
+require "ninefold/commands/brutus"
 require "ninefold/cli"
 
 module Ninefold
