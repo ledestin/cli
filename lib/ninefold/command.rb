@@ -5,6 +5,10 @@ module Ninefold
 
   private
 
+    def title(text)
+      say "#{text}\n", :magenta
+    end
+
     def user
       @user ||= Ninefold::User.find
     end

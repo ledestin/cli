@@ -3,9 +3,9 @@ module Ninefold
     desc "signin", "Sign in to Ninefold on this computer"
     def signin
       if user.signed_in?
-        say "Already signed in as #{user.name}\n", :magenta
+        title "Already signed in as #{user.name}"
       else
-        say "Please, sign in\n", :magenta
+        title "Please, sign in"
         interaction(:signin)
       end
     end
@@ -15,7 +15,7 @@ module Ninefold
       if user.signed_in?
         interaction(:signout)
       else
-        say "Not signed in yet", :magenta
+        title "Not signed in yet"
       end
     end
 
