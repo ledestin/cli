@@ -11,10 +11,10 @@ module Ninefold
 
         return done if @user.signed_in?
 
-        error "\nSorry. That username and password was invalid. Please try again"
+        error "Sorry. That username and password was invalid. Please try again"
       end
 
-      error "\nCould not log in"
+      error "Could not log in"
     end
   end
 end

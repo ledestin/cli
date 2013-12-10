@@ -13,8 +13,9 @@ module Ninefold
       end
     end
 
-    class AccessDenied < StandardError; end
-    class Unreachable  < StandardError; end
+    class AccessDenied  < StandardError; end
+    class Unprocessable < StandardError; end
+    class Unreachable   < StandardError; end
 
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
@@ -51,12 +52,15 @@ module Ninefold
         req.headers['Authorization'] = @token if @token
       end
 
-      raise AccessDenied if result.status == 403
-      raise Unreachable  if result.status  > 403
+      raise AccessDenied  if result.status == 403
+      raise Unprocessable if result.status  > 403
 
       Response.new(result).tap do |response|
         block.call(response) if block_given?
       end
+
+    rescue Faraday::Error::ConnectionFailed => e
+      raise Unreachable
     end
 
     class Response

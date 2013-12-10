@@ -25,6 +25,8 @@ module Ninefold
         @token    = response[:token]
         save
       end
+    rescue Ninefold::Host::AccessDenied => e
+      @token = nil
     end
 
     def save
