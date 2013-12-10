@@ -10,7 +10,8 @@ module Ninefold
     attr_accessor :name, :token
 
     def initialize(name=nil, token=nil)
-      @name, @token = name, token
+      @name  = name
+      @token = host.token = token
     end
 
     def signed_in?
@@ -21,12 +22,12 @@ module Ninefold
       response = host.post "/tokens", {username: username, password: password}
 
       if response.ok?
-        @name     = username
-        @token    = response[:token]
+        @name  = username
+        @token = host.token = response[:token]
         save
       end
     rescue Ninefold::Host::AccessDenied => e
-      @token = nil
+      @token = host.token = nil
     end
 
     def save

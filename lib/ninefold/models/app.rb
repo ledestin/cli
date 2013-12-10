@@ -12,8 +12,14 @@ module Ninefold
       end
     end
 
+    attr_reader :options
+
     def initialize(options={})
-      @options = options
+      @options = {}.tap do |hash|
+        options.each do |key, value|
+          hash[key.to_sym] = value
+        end
+      end
     end
 
     def id
@@ -29,7 +35,7 @@ module Ninefold
     end
 
     def to_s
-      name
+      "##{id} #{name}"
     end
   end
 end

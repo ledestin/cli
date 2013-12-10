@@ -20,7 +20,7 @@ module Ninefold
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
 
-    attr_accessor :name, :token
+    attr_accessor :name, :version, :token
 
     def initialize(name=DEFAULT_NAME, version=API_VERSION)
       @name, @version = name, version
@@ -75,6 +75,10 @@ module Ninefold
 
       def [](key)
         @data[key.to_s]
+      end
+
+      def to_h
+        @data
       end
     end
   end

@@ -9,8 +9,8 @@ module Ninefold
       @prefs  = prefs
     end
 
-    def start
-      run
+    def start(*args)
+      run *args
     rescue Ninefold::Host::AccessDenied => e
       error "Access denied"
     rescue Ninefold::Host::Unprocessable => e
