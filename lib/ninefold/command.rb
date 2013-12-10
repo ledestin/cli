@@ -13,6 +13,10 @@ module Ninefold
       say "ERROR: #{text}", :red
     end
 
+    def bsay(text)
+      Ninefold::Brutus.say text
+    end
+
     def user
       @user ||= Ninefold::User.find
     end

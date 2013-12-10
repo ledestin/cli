@@ -28,6 +28,11 @@ module Ninefold
       end
     end
 
+    desc "brutus", "Make the bruts say stuff"
+    def brutus(*args)
+      bsay args.join(" ")
+    end
+
     desc "console", "Run the rails console on your apps"
     def console
       signin unless user.signed_in?

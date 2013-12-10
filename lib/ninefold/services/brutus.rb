@@ -32,6 +32,27 @@ module Ninefold
       }
     ]
 
+    def self.say(text)
+      text = text.split("\n")
+      maxl = (text.map(&:size) + [20]).max
+      size = 14 # brutus mouth offset
+
+      text = text.map do |line|
+        " | #{line.center(maxl)} |"
+      end
+
+      text = [
+        "  #{'-' * (maxl + 2)}",
+        text.join("\n"),
+        "  #{'-' * size} #{'-' * (maxl - size)}",
+        "  #{' ' * size}V"
+      ]
+
+      text = "\e[35m#{text.join("\n")}\e[0m"
+
+      puts text + SPRITES[0].gsub("\n      ", "\n").gsub(/\s*\Z/, '')
+    end
+
     def initialize
       @munch_0 = sprite(0)
       @munch_1 = sprite(1)
