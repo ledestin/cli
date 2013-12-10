@@ -9,8 +9,10 @@ module Ninefold
       @user ||= Ninefold::User.find
     end
 
-    def interaction
-      @interaction = Ninefold::Interaction.new(self, self, user, Ninefold::Preferences)
+    def interaction(name)
+      Ninefold::Interaction.const_get(name.to_s.capitalize)
+        .new(self, self, user, Ninefold::Preferences)
+        .run
     end
   end
 end

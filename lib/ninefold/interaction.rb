@@ -7,6 +7,10 @@ module Ninefold
       @prefs  = prefs
     end
 
+    def run
+      raise NotImplementedError
+    end
+
     def say(*args)
       @output.say *args
     end
@@ -47,30 +51,6 @@ module Ninefold
       show_spinner
       yield
       hide_spinner
-    end
-
-    def signin
-      10.times do
-        username = ask("Username:")
-        password = ask("Password:", :echo => false)
-
-        with_spinner do
-          @user.signin(username, password)
-        end
-
-        return done if @user.signed_in?
-
-        error "\nSorry. That username and password was invalid. Please try again"
-      end
-
-      error "\nCould not log in"
-    end
-
-    def signout
-      if confirm("Are you sure?")
-        @user.delete
-        done
-      end
     end
   end
 

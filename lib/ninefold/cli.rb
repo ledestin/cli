@@ -6,14 +6,14 @@ module Ninefold
         say "Already signed in as #{user.name}\n", :magenta
       else
         say "Please, sign in\n", :magenta
-        interaction.signin
+        interaction(:signin)
       end
     end
 
     desc "signout", "Sign out from Ninefold on this computer"
     def signout
       if user.signed_in?
-        interaction.signout
+        interaction(:signout)
       else
         say "Not signed in yet", :magenta
       end
