@@ -36,12 +36,12 @@ module Ninefold
       end
     end
 
-    desc "redeploy", "trigger the app redeployment"
-    def redeploy
-      require_user
+    # desc "redeploy", "trigger the app redeployment"
+    # def redeploy
+    #   require_user
 
-      title "Redeploying..."
-    end
+    #   title "Redeploying..."
+    # end
 
   protected
 
