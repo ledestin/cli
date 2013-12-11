@@ -4,6 +4,8 @@ module Ninefold
     command_alias signout: 'user:signout'
     command_alias whoami:  'user:whoami'
 
+    command_alias console: 'apps:console'
+
     desc "user SUBCOMMAND", "manage user credentials"
     subcommand "user", Ninefold::Command::User
 

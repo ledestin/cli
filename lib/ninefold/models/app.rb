@@ -17,23 +17,11 @@ module Ninefold
     attr_reader :options
 
     def initialize(options={})
-      @options = {}.tap do |hash|
-        options.each do |key, value|
-          hash[key.to_sym] = value
-        end
-      end
+      @options = options
     end
 
-    def id
-      @options[:id]
-    end
-
-    def name
-      @options[:name]
-    end
-
-    def repo
-      @options[:repo]
+    def method_missing(name)
+      @options[name.to_s]
     end
 
     def to_s

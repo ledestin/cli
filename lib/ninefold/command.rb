@@ -30,9 +30,7 @@ module Ninefold
   protected
     def require_user
       if ! user.signed_in?
-        say "ERROR: Please sign in first", :red
-
-        invoke 'signin'
+        invoke 'ninefold:command:user:signin'
       end
     end
 

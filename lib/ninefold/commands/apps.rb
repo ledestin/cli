@@ -2,8 +2,6 @@ module Ninefold
   class Ninefold::Command::Apps < Ninefold::Command
     desc "list", "list the apps registered to this account"
     def list
-      require_user
-
       load_apps do |apps|
         if apps.empty?
           say "Apparently you don't have any active app on this account", :yellow
@@ -19,11 +17,7 @@ module Ninefold
 
     desc "info", "print out info about an app"
     def info
-      require_user
-
-      load_apps do |apps|
-        app = interaction(:pickapp, apps)
-
+      pick_app do |app|
         title "Getting the app info..."
 
         host.get "/apps/#{app.id}" do |response|
@@ -36,22 +30,33 @@ module Ninefold
       end
     end
 
-    # desc "redeploy", "trigger the app redeployment"
-    # def redeploy
-    #   require_user
+    desc "console", "run the rails console on an app"
+    def console
+      pick_app do |app|
+        title "Signing you in..."
 
-    #   title "Redeploying..."
-    # end
+        Ninefold::Console.new(app)
+      end
+    end
 
   protected
 
     def load_apps(&block)
+      require_user
+
       title "Requesting your apps list..."
       brutus = Ninefold::Brutus.new
       brutus.show
+
       App.load do |apps|
         brutus.hide
         block.call apps
+      end
+    end
+
+    def pick_app(&block)
+      load_apps do |apps|
+        block.call interaction(:pickapp, apps)
       end
     end
   end

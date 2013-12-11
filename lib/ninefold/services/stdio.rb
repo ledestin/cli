@@ -62,7 +62,7 @@ module Ninefold
       print "\r\u001b[#{options.size + 1}A"
 
       options.each_with_index do |option, i|
-        print "\e[36m#{i == selected ? '☛' : ' '}\e[0m  \e[37m#{option}\e[0m\n"
+        print " \e[36m#{i == selected ? '☛' : ' '}\e[0m  \e[37m#{option}\e[0m\n"
       end
 
       print "\n"
