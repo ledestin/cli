@@ -18,9 +18,22 @@ module Ninefold
       exit 0
     end
 
+    def self.command_alias(map)
+      map.each do |name, command|
+        desc name.to_s, "shortcut for #{command}"
+        define_method name do |*args|
+          invoke "ninefold:command:#{command}", args
+        end
+      end
+    end
+
   protected
     def require_user
-      error "Please sign in first" unless user.signed_in?
+      if ! user.signed_in?
+        say "ERROR: Please sign in first", :red
+
+        invoke 'signin'
+      end
     end
 
     def title(text)
