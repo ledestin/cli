@@ -26,9 +26,9 @@ module Ninefold
     end
 
     def pick(title, options)
-      say "#{title}", :yellow
+      puts "\e[33m#{title}\e[0m \e[90m(use arrows and press Enter)\e[0m"
 
-      puts "\n" * (options.size + 3)
+      puts "\n" * (options.size + 2)
 
       selected = 0
 

@@ -16,6 +16,7 @@ module Ninefold
 
       def clear
         netrc.delete host
+        netrc.save
       end
 
       def netrc

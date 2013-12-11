@@ -2,12 +2,14 @@ module Ninefold
   class App
     include Ninefold::Host::Access
 
-    def self.all
+    def self.load(&block)
       [].tap do |apps|
         Ninefold::Host.inst.get "/apps" do |response|
           response[:apps].each do |app|
             apps << new(app)
           end
+
+          block.call(apps) if block_given?
         end
       end
     end

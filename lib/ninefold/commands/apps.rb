@@ -49,10 +49,9 @@ module Ninefold
       title "Requesting your apps list..."
       brutus = Ninefold::Brutus.new
       brutus.show
-
-      host.get "/apps" do |response|
+      App.load do |apps|
         brutus.hide
-        block.call response[:apps].map{ |hash| Ninefold::App.new(hash) }
+        block.call apps
       end
     end
   end
