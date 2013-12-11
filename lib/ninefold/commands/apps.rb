@@ -34,8 +34,13 @@ module Ninefold
     def console
       pick_app do |app|
         title "Signing you in..."
+        show_spinner
 
-        Ninefold::Console.new(app)
+        app.console do |host, command|
+          hide_spinner
+
+          Ninefold::Runner.new(host, command)
+        end
       end
     end
 
@@ -45,11 +50,11 @@ module Ninefold
       require_user
 
       title "Requesting your apps list..."
-      brutus = Ninefold::Brutus.new
-      brutus.show
+      show_spinner
 
       App.load do |apps|
-        brutus.hide
+        hide_spinner
+
         block.call apps
       end
     end
@@ -58,6 +63,15 @@ module Ninefold
       load_apps do |apps|
         block.call interaction(:pickapp, apps)
       end
+    end
+
+    def show_spinner
+      @brutus ||= Ninefold::Brutus.new
+      @brutus.show
+    end
+
+    def hide_spinner
+      @brutus.hide
     end
   end
 end

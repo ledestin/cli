@@ -15,21 +15,23 @@ end
 
 class Ninefold::Host
 
-  def request(method, path, options={})
-    find_response_for path, options
+  def request(method, path, options={}, &block)
+    find_response_for path, options, &block
   end
 
-  def find_response_for(path, options)
+  def find_response_for(path, options, &block)
     request = (@requests || []).detect do |query|
       query.path == path && query.options.to_s == options.to_s
     end
 
     raise "Unexpected a request to path: #{path}, params: #{options} " if ! request
 
-    Response.new(request)
+    Response.new(request).tap do |response|
+      block.call(response) if block_given?
+    end
   end
 
-  def respond_to(path, options)
+  def respond_to(path, options={})
     Query.new(path, options).tap do |query|
       @requests ||= []
       @requests << query

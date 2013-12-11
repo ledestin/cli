@@ -8,9 +8,11 @@ module Ninefold
     rescue Ninefold::Host::AccessDenied => e
       error "Access denied"
     rescue Ninefold::Host::Unprocessable => e
-      error "Something went wron on the other side"
+      error "Something went wrong on the other side"
     rescue Ninefold::Host::Unreachable => e
       error "Could not reach the host"
+    rescue Ninefold::Key::NotFound => e
+      error "Could not locate your public key (~/.ssh/id_rsa.pub)"
     end
 
     def self.error(text)

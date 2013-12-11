@@ -2,14 +2,12 @@ module Ninefold
   class Key
     include Ninefold::Host::Access
 
-    def self.all
-      [].tap do |keys|
-        Ninefold::Host.inst.get "/apps/#{app_id}/keys" do |response|
-          response[:keys].each do |key|
-            keys << new(key[:app_id], key[:name])
-          end
-        end
-      end
+    class NotFound < StandardError; end
+
+    def self.read
+      File.read("#{Dir.home}/.ssh/id_rsa.pub")
+    rescue Errno::ENOENT => e
+      raise NotFound
     end
 
     def initialize(app_id, public_key=nil)
