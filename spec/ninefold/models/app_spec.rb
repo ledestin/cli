@@ -46,8 +46,6 @@ describe "Ninefold::App" do
         })
 
       app.console do |host, command|
-        p host
-        p command
         @host    = host
         @command = command
       end

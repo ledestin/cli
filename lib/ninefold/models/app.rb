@@ -24,8 +24,8 @@ module Ninefold
       @options[name.to_s]
     end
 
-    def console(&block)
-      host.post "/apps/#{id}/console", public_key: Ninefold::Key.read do |response|
+    def console(public_key=nil, &block)
+      host.post "/apps/#{id}/console", public_key: Ninefold::Key.read(public_key) do |response|
         ssh  = response[:ssh] || {}
         host = "#{ssh['user']}@#{ssh['host']} -P #{ssh['port']}"
 

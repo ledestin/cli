@@ -31,12 +31,13 @@ module Ninefold
     end
 
     desc "console", "run the rails console on an app"
-    def console
+    option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
+    def console(public_key)
       pick_app do |app|
         title "Signing you in..."
         show_spinner
 
-        app.console do |host, command|
+        app.console(public_key) do |host, command|
           hide_spinner
 
           Ninefold::Runner.new(host, command)

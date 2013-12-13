@@ -4,8 +4,9 @@ module Ninefold
 
     class NotFound < StandardError; end
 
-    def self.read
-      File.read("#{Dir.home}/.ssh/id_rsa.pub")
+    def self.read(location=nil)
+      location ||= "~/.ssh/id_rsa.pub"
+      File.read(location.sub(/\A~\//, "#{Dir.home}/"))
     rescue Errno::ENOENT => e
       raise NotFound
     end

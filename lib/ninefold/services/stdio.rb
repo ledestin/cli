@@ -88,8 +88,8 @@ module Ninefold
       `stty #{old_state}`
     end
 
-    def done
-      say "✔︎  Done", :green
+    def done(text="Done")
+      say "✔︎  #{text}", :green
     end
 
     def show_spinner

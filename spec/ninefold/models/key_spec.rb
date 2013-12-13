@@ -15,6 +15,10 @@ describe "Ninefold::Key" do
         Ninefold::Key.read
       }.should raise_error(Ninefold::Key::NotFound)
     end
+
+    it "lets you to read other key locations" do
+      Ninefold::Key.read(__FILE__).should == File.read(__FILE__)
+    end
   end
 
 end
