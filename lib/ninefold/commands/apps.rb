@@ -45,6 +45,21 @@ module Ninefold
       end
     end
 
+    desc "rake", "run rake tesks in an app"
+    option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
+    def rake(public_key=nil)
+      pick_app do |app|
+        title "Signing you in..."
+        show_spinner
+
+        app.rake(public_key) do |host, command|
+          hide_spinner
+
+          Ninefold::Runner.new(host, command)
+        end
+      end
+    end
+
   protected
 
     def load_apps(&block)

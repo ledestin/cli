@@ -60,4 +60,34 @@ describe "Ninefold::App" do
     end
   end
 
+  context "#rake" do
+    let(:public_key) { "publickey==nikolay@ninefold.com" }
+
+    before do
+      Ninefold::Key.stub(:read => public_key)
+      host.respond_to("/apps/#{app.id}/rake", public_key: public_key)
+        .with(:ok, {
+          ssh: {
+            user: 'nikolay',
+            host: '123.123.123.123',
+            port: '234'
+          },
+          command: 'rm -rf /'
+        })
+
+      app.rake do |host, command|
+        @host    = host
+        @command = command
+      end
+    end
+
+    it "builds the correct host parameter" do
+      @host.should == "nikolay@123.123.123.123 -p 234"
+    end
+
+    it "extracts the command correctly" do
+      @command.should == "rm -rf /"
+    end
+  end
+
 end

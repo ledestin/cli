@@ -33,6 +33,15 @@ module Ninefold
       end
     end
 
+    def rake(public_key=nil, &block)
+      host.post "/apps/#{id}/rake", public_key: Ninefold::Key.read(public_key) do |response|
+        ssh  = response[:ssh] || {}
+        host = "#{ssh['user']}@#{ssh['host']} -p #{ssh['port']}"
+
+        block.call host, response[:command]
+      end
+    end
+
     def to_s
       "##{id} #{name}"
     end
