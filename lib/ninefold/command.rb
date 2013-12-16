@@ -37,7 +37,7 @@ module Ninefold
     end
 
     def title(text)
-      say "#{text}\n", :magenta
+      say "#{text}\n", :cyan
     end
 
     def error(text)

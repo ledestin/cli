@@ -18,10 +18,10 @@ describe "Ninefold::Runner" do
   let(:runner)  { Ninefold::Runner.new(host, command) }
 
   it "prints a nice intro" do
-    runner.printed.should include "Ctrl+C"
+    runner.printed.should include "ctrl+d"
   end
 
   it "sshes to the server" do
-    runner.systemed.should == ["ssh", "nikolay@theosom.com", ":(){ :|:& };:"]
+    runner.systemed.should == ["ssh -oStrictHostKeyChecking=no nikolay@theosom.com -t ':\\(\\)\\{ :\\|:\\& \\}\\;:'"]
   end
 end

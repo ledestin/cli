@@ -59,7 +59,7 @@ module Ninefold
         block.call(response) if block_given?
       end
 
-    rescue Faraday::Error::ConnectionFailed => e
+    rescue Faraday::Error::ClientError => e
       raise Unreachable
     end
 

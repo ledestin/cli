@@ -52,7 +52,7 @@ describe "Ninefold::App" do
     end
 
     it "builds the correct host parameter" do
-      @host.should == "nikolay@123.123.123.123 -P 234"
+      @host.should == "nikolay@123.123.123.123 -p 234"
     end
 
     it "extracts the command correctly" do
