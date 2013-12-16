@@ -10,8 +10,8 @@ module Ninefold
     desc "user SUBCOMMAND", "manage user credentials"
     subcommand "user", Ninefold::Command::User
 
-    desc "keys SUBCOMMAND", "manage your SSH keys"
-    subcommand "keys", Ninefold::Command::Keys
+    # desc "keys SUBCOMMAND", "manage your SSH keys"
+    # subcommand "keys", Ninefold::Command::Keys
 
     desc "apps SUBCOMMAND", "manage your apps"
     subcommand "apps", Ninefold::Command::Apps
