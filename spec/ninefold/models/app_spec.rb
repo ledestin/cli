@@ -35,7 +35,7 @@ describe "Ninefold::App" do
 
     before do
       Ninefold::Key.stub(:read => public_key)
-      host.respond_to("/apps/#{app.id}/console", public_key: public_key)
+      host.respond_to("/apps/#{app.id}/commands/console", public_key: public_key)
         .with(:ok, {
           ssh: {
             user: 'nikolay',
@@ -65,17 +65,17 @@ describe "Ninefold::App" do
 
     before do
       Ninefold::Key.stub(:read => public_key)
-      host.respond_to("/apps/#{app.id}/rake", public_key: public_key)
+      host.respond_to("/apps/#{app.id}/commands/rake", public_key: public_key)
         .with(:ok, {
           ssh: {
             user: 'nikolay',
             host: '123.123.123.123',
             port: '234'
           },
-          command: 'rm -rf /'
+          command: 'nf rake'
         })
 
-      app.rake do |host, command|
+      app.rake 'routes' do |host, command|
         @host    = host
         @command = command
       end
@@ -86,7 +86,7 @@ describe "Ninefold::App" do
     end
 
     it "extracts the command correctly" do
-      @command.should == "rm -rf /"
+      @command.should == "nf rake routes"
     end
   end
 

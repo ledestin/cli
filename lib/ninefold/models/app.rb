@@ -25,7 +25,7 @@ module Ninefold
     end
 
     def console(public_key=nil, &block)
-      host.post "/apps/#{id}/console", public_key: Ninefold::Key.read(public_key) do |response|
+      host.post "/apps/#{id}/commands/console", public_key: Ninefold::Key.read(public_key) do |response|
         ssh  = response[:ssh] || {}
         host = "#{ssh['user']}@#{ssh['host']} -p #{ssh['port']}"
 
@@ -33,12 +33,12 @@ module Ninefold
       end
     end
 
-    def rake(public_key=nil, &block)
-      host.post "/apps/#{id}/rake", public_key: Ninefold::Key.read(public_key) do |response|
+    def rake(args, public_key=nil, &block)
+      host.post "/apps/#{id}/commands/rake", public_key: Ninefold::Key.read(public_key) do |response|
         ssh  = response[:ssh] || {}
         host = "#{ssh['user']}@#{ssh['host']} -p #{ssh['port']}"
 
-        block.call host, response[:command]
+        block.call host, "#{response[:command]} #{args}"
       end
     end
 

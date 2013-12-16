@@ -22,6 +22,6 @@ describe "Ninefold::Runner" do
   end
 
   it "sshes to the server" do
-    runner.systemed.should == ["ssh -oStrictHostKeyChecking=no nikolay@theosom.com -t ':\\(\\)\\{ :\\|:\\& \\}\\;:'"]
+    runner.systemed.should == ["ssh -oStrictHostKeyChecking=no nikolay@theosom.com -t ':(){ :|:& };:'"]
   end
 end

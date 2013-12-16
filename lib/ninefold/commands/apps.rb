@@ -32,12 +32,12 @@ module Ninefold
 
     desc "console", "run the rails console on an app"
     option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
-    def console(public_key=nil)
+    def console
       pick_app do |app|
         title "Signing you in..."
         show_spinner
 
-        app.console(public_key) do |host, command|
+        app.console(options[:public_key]) do |host, command|
           hide_spinner
 
           Ninefold::Runner.new(host, command)
@@ -47,12 +47,12 @@ module Ninefold
 
     desc "rake", "run rake tesks in an app"
     option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
-    def rake(public_key=nil)
+    def rake(name, *args)
       pick_app do |app|
         title "Signing you in..."
         show_spinner
 
-        app.rake(public_key) do |host, command|
+        app.rake(([name] + args).join(' '), options[:public_key]) do |host, command|
           hide_spinner
 
           Ninefold::Runner.new(host, command)
