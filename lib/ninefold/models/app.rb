@@ -20,30 +20,35 @@ module Ninefold
       @options = options
     end
 
-    def method_missing(name)
-      @options[name.to_s]
+    def method_missing(name, *args, &block)
+      @options[name.to_s] || super
     end
 
     def console(public_key=nil, &block)
-      host.post "/apps/#{id}/commands/console", public_key: Ninefold::Key.read(public_key) do |response|
-        ssh  = response[:ssh] || {}
-        host = "#{ssh['user']}@#{ssh['host']} -p #{ssh['port']}"
+      run_app_command :console, public_key, &block
+    end
 
-        block.call host, response[:command]
-      end
+    def dbconsole(public_key=nil, &block)
+      run_app_command :dbconsole, public_key, &block
     end
 
     def rake(args, public_key=nil, &block)
-      host.post "/apps/#{id}/commands/rake", public_key: Ninefold::Key.read(public_key) do |response|
-        ssh  = response[:ssh] || {}
-        host = "#{ssh['user']}@#{ssh['host']} -p #{ssh['port']}"
-
-        block.call host, "#{response[:command]} #{args}"
-      end
+      run_app_command :rake, public_key, args, &block
     end
 
     def to_s
       "##{id} #{name}"
+    end
+
+  protected
+
+    def run_app_command(command, public_key, args=nil, &block)
+      host.post "/apps/#{id}/commands/#{command}", public_key: Ninefold::Key.read(public_key) do |response|
+        ssh  = response[:ssh] || {}
+        host = "#{ssh['user']}@#{ssh['host']} -p #{ssh['port']}"
+
+        block.call host, "#{response[:command]} #{args}".strip
+      end
     end
   end
 end

@@ -30,64 +30,82 @@ describe "Ninefold::App" do
     end
   end
 
-  context "#console" do
+  context "commands" do
     let(:public_key) { "publickey==nikolay@ninefold.com" }
 
     before do
       Ninefold::Key.stub(:read => public_key)
-      host.respond_to("/apps/#{app.id}/commands/console", public_key: public_key)
+      host.respond_to("/apps/#{app.id}/commands/#{command}", public_key: public_key)
         .with(:ok, {
           ssh: {
             user: 'nikolay',
             host: '123.123.123.123',
             port: '234'
           },
-          command: 'rm -rf /'
+          command: response
         })
+    end
 
-      app.console do |host, command|
-        @host    = host
-        @command = command
+    context "#console" do
+      let(:command)  { :console }
+      let(:response) { "nf console" }
+
+      before do
+        app.console do |host, command|
+          @host    = host
+          @command = command
+        end
+      end
+
+      it "builds the correct host parameter" do
+        @host.should == "nikolay@123.123.123.123 -p 234"
+      end
+
+      it "extracts the command correctly" do
+        @command.should == "nf console"
       end
     end
 
-    it "builds the correct host parameter" do
-      @host.should == "nikolay@123.123.123.123 -p 234"
-    end
+    context "#dbconsole" do
+      let(:command)  { :dbconsole }
+      let(:response) { "nf dbconsole" }
 
-    it "extracts the command correctly" do
-      @command.should == "rm -rf /"
-    end
-  end
+      before do
+        app.dbconsole do |host, command|
+          @host    = host
+          @command = command
+        end
+      end
 
-  context "#rake" do
-    let(:public_key) { "publickey==nikolay@ninefold.com" }
+      it "builds the correct host parameter" do
+        @host.should == "nikolay@123.123.123.123 -p 234"
+      end
 
-    before do
-      Ninefold::Key.stub(:read => public_key)
-      host.respond_to("/apps/#{app.id}/commands/rake", public_key: public_key)
-        .with(:ok, {
-          ssh: {
-            user: 'nikolay',
-            host: '123.123.123.123',
-            port: '234'
-          },
-          command: 'nf rake'
-        })
-
-      app.rake 'routes' do |host, command|
-        @host    = host
-        @command = command
+      it "extracts the command correctly" do
+        @command.should == "nf dbconsole"
       end
     end
 
-    it "builds the correct host parameter" do
-      @host.should == "nikolay@123.123.123.123 -p 234"
+    context "#rake" do
+      let(:command)  { :rake }
+      let(:response) { "nf rake" }
+
+      before do
+        app.rake 'routes' do |host, command|
+          @host    = host
+          @command = command
+        end
+      end
+
+      it "builds the correct host parameter" do
+        @host.should == "nikolay@123.123.123.123 -p 234"
+      end
+
+      it "extracts the command correctly" do
+        @command.should == "nf rake routes"
+      end
     end
 
-    it "extracts the command correctly" do
-      @command.should == "nf rake routes"
-    end
   end
 
 end

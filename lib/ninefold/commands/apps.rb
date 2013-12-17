@@ -33,31 +33,19 @@ module Ninefold
     desc "console", "run the rails console on an app"
     option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
     def console
-      pick_app do |app|
-        title "Signing you in..."
-        show_spinner
+      run_app_command :console
+    end
 
-        app.console(options[:public_key]) do |host, command|
-          hide_spinner
-
-          Ninefold::Runner.new(host, command)
-        end
-      end
+    desc "dbconsole", "run the rails dbconsole"
+    option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
+    def dbconsole
+      run_app_command :dbconsole
     end
 
     desc "rake", "run rake tesks in an app"
     option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
     def rake(name, *args)
-      pick_app do |app|
-        title "Signing you in..."
-        show_spinner
-
-        app.rake(([name] + args).join(' '), options[:public_key]) do |host, command|
-          hide_spinner
-
-          Ninefold::Runner.new(host, command)
-        end
-      end
+      run_app_command :rake, ([name] + args).join(' ')
     end
 
   protected
@@ -78,6 +66,19 @@ module Ninefold
     def pick_app(&block)
       load_apps do |apps|
         block.call interaction(:pickapp, apps)
+      end
+    end
+
+    def run_app_command(name, *args, &block)
+      pick_app do |app|
+        title "Signing you in..."
+        show_spinner
+
+        app.__send__(name, *args, options[:public_key]) do |host, command|
+          hide_spinner
+
+          Ninefold::Runner.new(host, command)
+        end
       end
     end
 

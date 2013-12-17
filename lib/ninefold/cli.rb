@@ -1,11 +1,12 @@
 module Ninefold
   class CLI < Ninefold::Command
-    command_alias signin:  'user:signin'
-    command_alias signout: 'user:signout'
-    command_alias whoami:  'user:whoami'
+    command_alias signin:    'user:signin'
+    command_alias signout:   'user:signout'
+    command_alias whoami:    'user:whoami'
 
-    command_alias console: 'apps:console'
-    command_alias rake:    'apps:rake'
+    command_alias console:   'apps:console'
+    command_alias dbconsole: 'apps:dbconsole'
+    command_alias rake:      'apps:rake'
 
     desc "user SUBCOMMAND", "manage user credentials"
     subcommand "user", Ninefold::Command::User
