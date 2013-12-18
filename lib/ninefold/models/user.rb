@@ -19,7 +19,7 @@ module Ninefold
     end
 
     def signin(username, password)
-      response = host.post "/tokens", {username: username, password: password}
+      response = host.post "/tokens", session: {username: username, password: password}
 
       if response.ok?
         @name  = username
