@@ -14,14 +14,26 @@ module Ninefold
       end
     end
 
-    attr_reader :options
+    attr_reader :attributes
 
-    def initialize(options={})
-      @options = options
+    def initialize(attributes={})
+      @attributes = attributes
+    end
+
+    def fetch(&block)
+      host.get "/apps/#{id}" do |response|
+        if response.ok?
+          response[:app].each do |key, value|
+            @attributes[key.to_s] = value
+          end
+
+          block.call(self) if block_given?
+        end
+      end
     end
 
     def method_missing(name, *args, &block)
-      @options[name.to_s] || super
+      @attributes[name.to_s] || super
     end
 
     def console(public_key=nil, &block)
