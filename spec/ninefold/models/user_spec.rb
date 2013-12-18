@@ -40,7 +40,7 @@ describe 'Ninefold::User' do
 
     context "with correct credentials" do
       before do
-        host.respond_to("/tokens", {username: 'nikolay', password: 'password'})
+        host.respond_to("/tokens", session: {username: 'nikolay', password: 'password'})
           .with(:ok, {token: token})
       end
 
@@ -66,7 +66,7 @@ describe 'Ninefold::User' do
 
     context "with incorrect credentials" do
       before do
-        host.respond_to("/tokens", {username: "nikolay", password: "wrong-password"})
+        host.respond_to("/tokens", session: {username: "nikolay", password: "wrong-password"})
           .with(:failed, {no: "token"})
       end
 

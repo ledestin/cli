@@ -11,9 +11,10 @@ module Ninefold
 
       result = @input.ask label, :cyan, options
 
-      `stty #{old_state}` && say("\n") if options[:echo] == false
-
       result
+
+    ensure
+      `stty #{old_state}` && say("\n") if options[:echo] == false
     end
 
     def error(msg)
