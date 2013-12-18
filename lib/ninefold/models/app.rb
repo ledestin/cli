@@ -36,6 +36,12 @@ module Ninefold
       run_app_command :rake, public_key, args, &block
     end
 
+    def redeploy(force=false, &block)
+      host.post "/apps/#{id}/redeploy", force ? {force_redeploy: true} : {} do |response|
+        block.call(response.ok? ? true : false)
+      end
+    end
+
     def to_s
       "##{id} #{name}"
     end

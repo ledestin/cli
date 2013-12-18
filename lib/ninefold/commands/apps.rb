@@ -48,6 +48,21 @@ module Ninefold
       run_app_command :rake, ([name] + args).join(' ')
     end
 
+    desc "redeploy", "trigger the app redeployment"
+    option :force, type: 'boolean', aliases: '-f', desc: "use the force Luke!"
+    def redeploy
+      pick_app do |app|
+        title "Starting the redeployment..."
+        app.redeploy options[:force] do |success|
+          if success
+            say "Redeployment was successfully scheduled", :green
+          else
+            say "Redeployment failed :(", :red
+          end
+        end
+      end
+    end
+
   protected
 
     def load_apps(&block)

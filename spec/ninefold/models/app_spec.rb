@@ -108,4 +108,44 @@ describe "Ninefold::App" do
 
   end
 
+  context '#redeploy' do
+    let(:params) { {} }
+
+    before do
+      host.respond_to("/apps/#{app.id}/redeploy", params).with(response_status)
+    end
+
+    context 'successfull' do
+      let(:response_status) { :ok }
+
+      context 'normal case' do
+        it "schedules the redeploy" do
+          app.redeploy do |success|
+            success.should == true
+          end
+        end
+      end
+
+      context 'forced redeploy' do
+        let(:params) { {force_redeploy: true} }
+
+        it "shedules the redeploy" do
+          app.redeploy true do |success|
+            success.should == true
+          end
+        end
+      end
+    end
+
+    context 'server side failure' do
+      let(:response_status) { :fail }
+
+      it "gets handled correctly" do
+        app.redeploy do |success|
+          success.should == false
+        end
+      end
+    end
+  end
+
 end
