@@ -3,30 +3,14 @@ module Ninefold
     desc "list", "list the apps registered to this account"
     def list
       load_apps do |apps|
-        if apps.empty?
-          say "Apparently you don't have any active app on this account", :yellow
-        else
-          apps.each do |app|
-            puts " - #{app}"
-          end
-
-          puts "\n"
-        end
+        interaction :listapps, apps
       end
     end
 
     desc "info", "print out info about an app"
     def info
       pick_app do |app|
-        title "Getting the app info..."
-
-        host.get "/apps/#{app.id}" do |response|
-          if response.ok?
-            response[:app].each do |key, value|
-              puts "#{key.capitalize.ljust(9)} #{value}"
-            end
-          end
-        end
+        interaction :appinfo, app
       end
     end
 
@@ -52,14 +36,7 @@ module Ninefold
     option :force, type: 'boolean', aliases: '-f', desc: "use the force Luke!"
     def redeploy
       pick_app do |app|
-        title "Starting the redeployment..."
-        app.redeploy options[:force] do |success|
-          if success
-            say "Redeployment was successfully scheduled", :green
-          else
-            say "Redeployment failed :(", :red
-          end
-        end
+        interaction :redeploy, app, options[:force]
       end
     end
 

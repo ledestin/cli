@@ -4,6 +4,10 @@ module Ninefold
       @output.say *args
     end
 
+    def title(text)
+      say "#{text}\n", :cyan
+    end
+
     def ask(label, options={})
       # a quick fix until Thor with STDOUT.noecho things get released
       old_state = `stty -g` if options[:echo] == false
