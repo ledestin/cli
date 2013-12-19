@@ -54,6 +54,12 @@ module Ninefold
       end
     end
 
+    def deploy_status(&block)
+      host.get "/apps/#{id}/deploy_status" do |response|
+        block.call response['status']
+      end
+    end
+
     def to_s
       "##{id} #{name}"
     end

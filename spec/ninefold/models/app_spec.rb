@@ -174,4 +174,22 @@ describe "Ninefold::App" do
     end
   end
 
+  context '#deploy_status' do
+    let(:deploy_status) { "running" }
+
+    before do
+      host.respond_to("/apps/#{app.id}/deploy_status").with(:ok, status: deploy_status)
+    end
+
+    it "gets the deploy status and yields it in the callback" do
+      @status = nil
+
+      app.deploy_status do |status|
+        @status = status
+      end
+
+      @status.should == deploy_status
+    end
+  end
+
 end

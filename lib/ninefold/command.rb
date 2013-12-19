@@ -52,10 +52,10 @@ module Ninefold
       @host ||= Ninefold::Host.inst
     end
 
-    def interaction(name, *args)
+    def interaction(name, *args, &block)
       Ninefold::Interaction.const_get(name.to_s.capitalize)
         .new(self, self, user, Ninefold::Preferences)
-        .run(*args)
+        .run(*args, &block)
     end
   end
 end

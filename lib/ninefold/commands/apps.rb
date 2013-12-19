@@ -36,7 +36,17 @@ module Ninefold
     option :force, type: 'boolean', aliases: '-f', desc: "use the force Luke!"
     def redeploy
       pick_app do |app|
-        interaction :redeploy, app, options[:force]
+        interaction :redeploy, app, options[:force] do
+          puts "\n"
+          interaction :status, app
+        end
+      end
+    end
+
+    desc "deploy_status", "check on an app's deployment status"
+    def deploy_status
+      pick_app do |app|
+        interaction :status, app
       end
     end
 

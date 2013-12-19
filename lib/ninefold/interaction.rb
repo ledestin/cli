@@ -9,7 +9,7 @@ module Ninefold
       @prefs  = prefs
     end
 
-    def run(*args)
+    def run(*args, &block)
       raise NotImplementedError
     end
   end

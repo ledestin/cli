@@ -26,6 +26,10 @@ module Ninefold
       say "\nERROR: #{msg}", :red
     end
 
+    def alert(msg)
+      say msg, :yellow
+    end
+
     def confirm(msg)
       @input.yes?(msg, :cyan)
     end
