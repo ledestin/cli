@@ -4,9 +4,9 @@ module Ninefold
     command_alias signout:   'user:signout'
     command_alias whoami:    'user:whoami'
 
-    command_alias console:   'apps:console'
-    command_alias dbconsole: 'apps:dbconsole'
-    command_alias rake:      'apps:rake'
+    command_alias console:   'app:console'
+    command_alias dbconsole: 'app:dbconsole'
+    command_alias rake:      'app:rake'
 
     desc "user SUBCOMMAND", "manage user credentials"
     subcommand "user", Ninefold::Command::User
@@ -14,8 +14,8 @@ module Ninefold
     # desc "keys SUBCOMMAND", "manage your SSH keys"
     # subcommand "keys", Ninefold::Command::Keys
 
-    desc "apps SUBCOMMAND", "manage your apps"
-    subcommand "apps", Ninefold::Command::Apps
+    desc "app SUBCOMMAND", "manage your apps"
+    subcommand "app", Ninefold::Command::Apps
 
     desc "brutus SUBCOMMAND", "make Brutus do things"
     subcommand "brutus", Ninefold::Command::Brutus
