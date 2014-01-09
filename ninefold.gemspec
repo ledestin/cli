@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Ninefold::VERSION
   spec.authors       = ["Yehuda Katz", "Nikolay Nemshilov"]
   spec.email         = ["wycats@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = "Ninefold CLI"
+  spec.summary       = "The official ninefold CLI"
+  spec.homepage      = "http://ninefold.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
