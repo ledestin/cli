@@ -15,6 +15,16 @@ describe "Ninefold::Config" do
     Ninefold::Config.new(config_file)
   }
 
+  describe ".read" do
+    it "returns a config instance if the file exists" do
+      Ninefold::Config.read(config.filename).should be_a(Ninefold::Config)
+    end
+
+    it "returns nil if the file doesn't exists" do
+      Ninefold::Config.read("/non/existing/file").should == nil
+    end
+  end
+
   describe "new instance" do
     it "saves the filename" do
       config.filename.should == config_file

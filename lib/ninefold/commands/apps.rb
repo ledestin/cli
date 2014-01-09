@@ -2,6 +2,8 @@ module Ninefold
   class Ninefold::Command::Apps < Ninefold::Command
     desc "list", "list the apps registered to this account"
     def list
+      require_user
+
       load_apps do |apps|
         interaction :listapps, apps
       end
@@ -53,8 +55,6 @@ module Ninefold
   protected
 
     def load_apps(&block)
-      require_user
-
       title "Requesting your apps list..."
       show_spinner
 
@@ -66,8 +66,17 @@ module Ninefold
     end
 
     def pick_app(&block)
-      load_apps do |apps|
-        block.call interaction(:pickapp, apps)
+      require_user
+
+      if app = app_from_dot_ninefold_file
+        block.call app
+      else
+        load_apps do |apps|
+          if app = interaction(:pickapp, apps)
+            save_app_in_dot_ninefold_file(app)
+            block.call app
+          end
+        end
       end
     end
 
@@ -91,6 +100,32 @@ module Ninefold
 
     def hide_spinner
       @brutus.hide
+    end
+
+    def app_from_dot_ninefold_file
+      if config = Ninefold::Config.read("#{Dir.pwd}/.ninefold")
+        Ninefold::App.new(config['app']) if config['app']
+      end
+    end
+
+    def save_app_in_dot_ninefold_file(app)
+      if app.repo == current_rails_app_git_url
+        Ninefold::Config.new("#{Dir.pwd}/.ninefold").write(app: app.attributes)
+      end
+    end
+
+    def current_rails_app_git_url
+      marker_files  = ["Gemfile.lock", ".git/config", "app/controllers/application_controller.rb"]
+      its_rails_app = marker_files.map { |f| File.exists?("#{Dir.pwd}/#{f}") }.all?
+
+      if its_rails_app
+        git_config = Ninefold::Config.read("#{Dir.pwd}/.git/config")
+        git_config.each do |group, params|
+          params.each do |key, value|
+            return value if key == 'url'
+          end
+        end
+      end
     end
   end
 end

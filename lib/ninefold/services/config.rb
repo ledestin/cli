@@ -23,6 +23,10 @@ module Ninefold
       @params[key] = value
     end
 
+    def each(&block)
+      @params.each &block
+    end
+
     def read
       hash = @params
 

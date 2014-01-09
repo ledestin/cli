@@ -5,6 +5,8 @@ module Ninefold
 
     def self.start(*args)
       super
+    rescue Interrupt => e
+      # do nothing if the user interrupted the programm
     rescue Ninefold::Host::AccessDenied => e
       error "Access denied"
     rescue Ninefold::Host::Unprocessable => e
