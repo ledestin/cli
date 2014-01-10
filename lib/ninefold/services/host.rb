@@ -51,7 +51,7 @@ module Ninefold
 
     def request(method, path, params, &block)
       result = @conn.__send__ method, "/api/#{@version}#{path}", params do |req|
-        req.headers['Authorization'] = @token if @token
+        req.headers['NFAuthToken'] = @token if @token
       end
 
       raise NotFound      if result.status == 404
