@@ -13,6 +13,7 @@ module Ninefold
       end
     end
 
+    class NotFound      < StandardError; end
     class AccessDenied  < StandardError; end
     class Unprocessable < StandardError; end
     class Unreachable   < StandardError; end
@@ -53,8 +54,9 @@ module Ninefold
         req.headers['Authorization'] = @token if @token
       end
 
+      raise NotFound      if result.status == 404
       raise AccessDenied  if result.status == 403
-      raise Unprocessable if result.status  > 403
+      raise Unprocessable if result.status >  404
 
       Response.new(result).tap do |response|
         block.call(response) if block_given?

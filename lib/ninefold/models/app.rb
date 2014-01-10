@@ -22,13 +22,11 @@ module Ninefold
 
     def fetch(&block)
       host.get "/apps/#{id}" do |response|
-        if response.ok?
-          response[:app].each do |key, value|
-            @attributes[key.to_s] = value
-          end
-
-          block.call(self) if block_given?
+        response[:app].each do |key, value|
+          @attributes[key.to_s] = value
         end
+
+        block.call(self) if block_given?
       end
     end
 

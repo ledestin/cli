@@ -7,6 +7,8 @@ module Ninefold
       super
     rescue Interrupt => e
       puts "\n" # do nothing if the user interrupted the programm
+    rescue Ninefold::Host::NotFound => e
+      error "Server returned 404"
     rescue Ninefold::Host::AccessDenied => e
       error "Access denied"
     rescue Ninefold::Host::Unprocessable => e
