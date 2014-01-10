@@ -23,8 +23,9 @@ module Ninefold
     attr_accessor :name, :version, :token
 
     def initialize(name=DEFAULT_NAME, version=API_VERSION)
-      @name, @version = name, version
-      @conn = Faraday.new(url: "#{@name.slice(0,9)=="localhost" ? "http" : "https"}://#{@name}")
+      @name, @version, @protocol = name, version, name.slice(0,9)=="localhost" ? "http" : "https"
+      @conn =  Faraday.new(url: "#{@protocol}://#{@name}", :ssl => {:verify => false})
+      @conn.basic_auth ENV['PASSWORD'], ENV['PASSWORD'] if ENV['PASSWORD']
     end
 
     def get(path, options={}, &block)
