@@ -68,7 +68,7 @@ module Ninefold
     def pick_app(&block)
       require_user
 
-      if app = app_from_dot_ninefold_file
+      if app = app_from_dot_ninefold_file || app_from_env_id
         block.call app
       else
         load_apps do |apps|
@@ -100,6 +100,10 @@ module Ninefold
 
     def hide_spinner
       @brutus.hide
+    end
+
+    def app_from_env_id
+      Ninefold::App.new('id' => ENV['APP_ID']) if ENV['APP_ID']
     end
 
     def app_from_dot_ninefold_file
