@@ -36,9 +36,15 @@ module Ninefold
     def redeploy
       pick_app do |app|
         interaction :redeploy, app, options[:force] do
-          puts "\n"
           interaction :status, app
         end
+      end
+    end
+
+    desc "redeploy_command", "print a redeploy command for CI"
+    def redeploy_command
+      pick_app do |app|
+        puts "AUTH_TOKEN=#{user.token} APP_ID=#{app.id} ninefold app redeploy"
       end
     end
 
