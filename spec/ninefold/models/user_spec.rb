@@ -95,12 +95,9 @@ describe 'Ninefold::User' do
     let(:token_store) { Ninefold::Token }
 
     context ".find" do
-
       context "with existing token" do
-        before do
-          token_store.stub(:find => ['nikolay', token])
-          @user = Ninefold::User.find
-        end
+        before { token_store.stub(:find => ['nikolay', token]) }
+        before { @user = Ninefold::User.find }
 
         it { @user.should be_a(Ninefold::User) }
         it { @user.name.should == 'nikolay' }
@@ -108,16 +105,26 @@ describe 'Ninefold::User' do
       end
 
       context "with missing token" do
-        before do
-          token_store.stub(:find => nil)
-          @user = Ninefold::User.find
-        end
+        before { token_store.stub(:find => nil) }
+        before { @user = Ninefold::User.find }
 
         it { @user.should be_a(Ninefold::User) }
         it { @user.name.should be_nil }
         it { @user.token.should be_nil }
       end
+
+      context "with ENV['AUTH_TOKEN']" do
+        before { token_store.stub(:find => nil) }
+        before { ENV['AUTH_TOKEN'] = token }
+        before { @user = Ninefold::User.find }
+        after { ENV['AUTH_TOKEN'] = nil }
+
+        it { @user.should be_a(Ninefold::User) }
+        it { @user.name.should == nil }
+        it { @user.token.should == token }
+      end
     end
+
 
     context "#save" do
       it "saves the netrc data when there is a username and a token" do

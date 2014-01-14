@@ -4,6 +4,7 @@ module Ninefold
 
     def self.find(host_name=nil)
       name, token = Ninefold::Token.find(host_name)
+      token ||= ENV['AUTH_TOKEN']
       new name, token
     end
 

@@ -22,7 +22,9 @@ module Ninefold
     desc "whoami", "Print info about the current user"
     def whoami
       if user.signed_in?
-        title "You're signed in as: #{user.name}"
+        title "You're signed in as"
+
+        say "Username:  #{user.name}\nAuthToken: #{user.token}"
       else
         title "You're not signed in"
       end
