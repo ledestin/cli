@@ -17,19 +17,16 @@ module Ninefold
     end
 
     desc "console", "run the rails console on an app"
-    option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
     def console
       run_app_command :console
     end
 
     desc "dbconsole", "run the rails dbconsole"
-    option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
     def dbconsole
       run_app_command :dbconsole
     end
 
     desc "rake", "run rake tesks in an app"
-    option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
     def rake(name, *args)
       run_app_command :rake, ([name] + args).join(' ')
     end

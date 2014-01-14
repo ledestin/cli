@@ -31,7 +31,7 @@ module Ninefold
     end
 
     def confirm(msg)
-      @input.yes?(msg, :cyan)
+      ARGV.include?('--sure') || ARGV.include?('-s') || @input.yes?(msg, :cyan)
     end
 
     def pick(title, options)
