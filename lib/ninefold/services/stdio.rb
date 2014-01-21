@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 module Ninefold
   module Stdio
     def say(*args)
