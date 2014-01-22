@@ -15,7 +15,7 @@ module Ninefold
     # subcommand "keys", Ninefold::Command::Keys
 
     desc "app SUBCOMMAND", "manage your apps"
-    subcommand "app", Ninefold::Command::Apps
+    subcommand "app", Ninefold::Command::App
 
     desc "brutus SUBCOMMAND", "make Brutus do things"
     subcommand "brutus", Ninefold::Command::Brutus

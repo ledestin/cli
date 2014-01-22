@@ -1,5 +1,5 @@
 module Ninefold
-  class Ninefold::Command::Apps < Ninefold::Command
+  class Ninefold::Command::App < Ninefold::Command
     desc "list", "list the apps registered to this account"
     def list
       require_user
