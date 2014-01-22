@@ -1,7 +1,7 @@
 module Ninefold
   class Interaction::Status < Interaction
     def run(app)
-      title "Redeploying your app..."
+      title "Checking the deployment status..."
       show_spinner
       next_tick(app)
     end
