@@ -8,10 +8,8 @@ module Ninefold
   # * a global file
   class Preferences
     def self.defaults
-      dev_env = File.exists?("#{Dir.pwd}/ninefold.gemspec")
-
       {
-        host: dev_env ? "localhost:3000" : "portal.ninefold.com"
+        host: "portal.ninefold.com"
       }
     end
 
