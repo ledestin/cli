@@ -1,24 +1,39 @@
-# Ninefold
+# Ninefold CLI
 
-TODO: Write a gem description
+This package is the official ninefold.com CLI
 
 ## Installation
 
-Add this line to your application's Gemfile:
+You can install this CLI with the usual `gem install` command
 
-    gem 'ninefold'
+    gem install ninefold
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install ninefold
 
 ## Usage
 
-TODO: Write usage instructions here
+Start with
+
+    ninefold signin
+
+And enter your credentials for the `ninefold` portal.
+
+Then run the following to get the list of the `app` related commands
+
+    ninefold app help
+
+
+## Binding An App
+
+If you run any of the `ninefold app` commands from your rails app root
+folder and the app's git url will match the one you picked from the apps
+list during the command run, ninefold CLI will create the `.ninefold`
+file in your app root folder.
+
+Once that happened, the CLI will know which app it is working with and
+won't ask you to pick an app from the list again.
+
+If you don't need this binding anymore, you can safely delete this file.
+
 
 ## Contributing
 
@@ -27,3 +42,25 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+
+## License
+
+All code in this library is released under the terms of the MIT license
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
