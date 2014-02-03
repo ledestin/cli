@@ -92,6 +92,26 @@ describe "Ninefold::App" do
       end
     end
 
+    context "#log" do
+      let(:command)  { :log }
+      let(:response) { "nf log" }
+
+      before do
+        app.log do |host, command|
+          @host    = host
+          @command = command
+        end
+      end
+
+      it "builds the correct host parameter" do
+        @host.should == "nikolay@123.123.123.123 -p 234"
+      end
+
+      it "extracts the command correctly" do
+        @command.should == "nf log"
+      end
+    end
+
     context "#dbconsole" do
       let(:command)  { :dbconsole }
       let(:response) { "nf dbconsole" }

@@ -31,6 +31,11 @@ module Ninefold
       run_app_command :rake, ([name] + args).join(' ')
     end
 
+    desc "log", "tail logs from your application"
+    def log
+      run_app_command :log
+    end
+
     desc "redeploy", "trigger the app redeployment"
     option :force, type: 'boolean', aliases: '-f', desc: "use the force Luke!"
     def redeploy
