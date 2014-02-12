@@ -39,6 +39,7 @@ module Ninefold
     def require_user
       if ! user.signed_in?
         invoke 'ninefold:command:user:signin'
+        @user = nil
       end
     end
 
