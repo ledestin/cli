@@ -31,10 +31,11 @@ module Ninefold
       run_app_command :rake, ([name] + args).join(' ')
     end
 
-    desc "log", "tail logs from your application"
-    def log
-      run_app_command :log
-    end
+    # TODO disabled for now, until we figure what to do with it
+    # desc "log", "tail logs from your application"
+    # def log
+    #   run_app_command :log
+    # end
 
     desc "redeploy", "trigger the app redeployment"
     option :force, type: 'boolean', aliases: '-f', desc: "use the force Luke!"
@@ -115,12 +116,14 @@ module Ninefold
     end
 
     def app_from_dot_ninefold_file
+      return nil # FIXME disabled for now, until we figure what to do with it
       if config = Ninefold::Config.read("#{Dir.pwd}/.ninefold")
         Ninefold::App.new(config['app']) if config['app']
       end
     end
 
     def save_app_in_dot_ninefold_file(app)
+      return nil # FIXME disabled for now, until we figure what to do with it
       if app.repo == current_rails_app_git_url
         Ninefold::Config.new("#{Dir.pwd}/.ninefold").write(app: app.attributes)
       end
