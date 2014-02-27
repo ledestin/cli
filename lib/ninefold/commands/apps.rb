@@ -104,7 +104,7 @@ module Ninefold
 
     def show_spinner
       @brutus ||= Ninefold::Brutus.new
-      @brutus.show
+      @brutus.show unless options[:'no-brutus']
     end
 
     def hide_spinner
