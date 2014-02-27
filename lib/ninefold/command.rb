@@ -4,6 +4,7 @@ module Ninefold
   class Command < Thor
     class_option :sure, type: 'boolean', aliases: '-s', desc: "don't ask for confirmation"
     class_option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
+    class_option :'no-brutus', type: 'boolean', aliases: '-q', desc: "hides Brutus :("
 
     def self.start(*args)
       super
