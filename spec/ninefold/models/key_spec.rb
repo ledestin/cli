@@ -5,7 +5,8 @@ describe "Ninefold::Key" do
 
   context ".read" do
     it "returns the current public key as a string" do
-      Ninefold::Key.read.should == File.read(key_file)
+      File.stub(:read).with(key_file).and_return("rsa key")
+      Ninefold::Key.read.should == "rsa key"
     end
 
     it "raises Ninefold::Key::NotFound if public key file doesn't exist" do
