@@ -1,4 +1,4 @@
-# Ninefold CLI
+# Ninefold CLI [![Build Status](https://travis-ci.org/ninefold/cli.png)](https://travis-ci.org/ninefold/cli) [![Code Climate](https://codeclimate.com/github/ninefold/cli.png)](https://codeclimate.com/github/ninefold/cli)
 
 This package is the official ninefold.com CLI
 
