@@ -2,8 +2,34 @@
 
 module Ninefold
   module Stdio
-    def say(*args)
-      @output.say *args
+
+    def self.robot_mode(value=nil)
+      if value == nil
+        @robot_mode || ! STDOUT.tty?
+      else
+        @robot_mode = !!value
+      end
+    end
+
+    def self.clean(text)
+      text = text.gsub(/\e\[\d+m/, '') if robot_mode
+      text
+    end
+
+    def self.print(text)
+      Kernel.print clean(text)
+    end
+
+    def puts(text)
+      Ninefold::Stdio.print(text + "\n")
+    end
+
+    def print(text)
+      Ninefold::Stdio.print(text)
+    end
+
+    def say(text, *args)
+      @output.say Ninefold::Stdio.clean(text), *args
     end
 
     def title(text)
@@ -70,7 +96,7 @@ module Ninefold
     end
 
     def print_options(options, selected=0)
-      print "\r\u001b[#{options.size + 1}A"
+      print "\r\e[#{options.size + 1}A"
 
       options.each_with_index do |option, i|
         print " \e[36m#{i == selected ? '☛' : ' '}\e[0m  #{option}\n"
@@ -104,8 +130,10 @@ module Ninefold
     end
 
     def show_spinner
+      return if Ninefold::Stdio.robot_mode
+
       @spinner ||= Ninefold::Brutus.new
-      @spinner.show unless options[:'no-brutus']
+      @spinner.show
     end
 
     def hide_spinner

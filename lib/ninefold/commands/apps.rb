@@ -50,7 +50,7 @@ module Ninefold
     desc "redeploy_command", "print a redeploy command for CI"
     def redeploy_command
       pick_app do |app|
-        puts "AUTH_TOKEN=#{user.token} APP_ID=#{app.id} ninefold app redeploy"
+        puts "AUTH_TOKEN=#{user.token} APP_ID=#{app.id} ninefold app redeploy --robot"
       end
     end
 
@@ -103,12 +103,14 @@ module Ninefold
     end
 
     def show_spinner
+      return if Ninefold::Stdio.robot_mode
+
       @brutus ||= Ninefold::Brutus.new
-      @brutus.show unless options[:'no-brutus']
+      @brutus.show
     end
 
     def hide_spinner
-      @brutus.hide
+      @brutus.hide if @brutus
     end
 
     def app_from_env_id

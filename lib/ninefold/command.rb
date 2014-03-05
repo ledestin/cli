@@ -4,9 +4,11 @@ module Ninefold
   class Command < Thor
     class_option :sure, type: 'boolean', aliases: '-s', desc: "don't ask for confirmation"
     class_option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
-    class_option :'no-brutus', type: 'boolean', aliases: '-q', desc: "hides Brutus :("
+    class_option :robot, type: 'boolean', aliases: '-q', desc: 'plain black and white mode without animations'
 
     def self.start(*args)
+      Ninefold::Stdio.robot_mode (ARGV & ['--no-brutus', '--robot']).size > 0
+
       super
     rescue Interrupt => e
       puts "\n" # do nothing if the user interrupted the programm
@@ -23,7 +25,7 @@ module Ninefold
     end
 
     def self.error(text)
-      puts "\e[31mERROR: #{text}\e[0m"
+      Ninefold::Stdio.print("\e[31mERROR: #{text}\e[0m\n")
       exit 0
     end
 
@@ -45,7 +47,7 @@ module Ninefold
     end
 
     def title(text)
-      say "#{text}\n", :cyan
+      Ninefold::Stdio.print("\e[36m#{text}\e[0m\n")
     end
 
     def error(text)

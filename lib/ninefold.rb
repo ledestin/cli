@@ -23,6 +23,7 @@ require "ninefold/commands/user"
 require "ninefold/commands/keys"
 require "ninefold/commands/apps"
 require "ninefold/commands/brutus"
+require "ninefold/thor"
 require "ninefold/cli"
 
 module Ninefold
