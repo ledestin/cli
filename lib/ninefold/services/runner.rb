@@ -12,5 +12,9 @@ module Ninefold
         print "\n\e[90mLater...\e[0m\n"
       end
     end
+
+    def print(str)
+      Ninefold::Stdio.print str
+    end
   end
 end
