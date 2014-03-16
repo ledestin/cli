@@ -31,11 +31,17 @@ module Ninefold
       run_app_command :rake, ([name] + args).join(' ')
     end
 
-    # TODO disabled for now, until we figure what to do with it
-    # desc "log", "tail logs from your application"
-    # def log
-    #   run_app_command :log
-    # end
+    desc "log", "tail logs from your application"
+    option :tail,   type: 'boolean', aliases: "-t", desc: "continuously tail the logs"
+    option :source, type: 'string',  aliases: "-s", desc: "type of logs (rails/asset/bundler/cheflog/error/migration, etc)"
+    option :search, type: 'string',  aliases: "-q", desc: "search keywords"
+    option :from,   type: 'string',  aliases: "-f", desc: "from datetime (default from the beginning of the day)"
+    option :to,     type: 'string',  aliases: "-t", desc: "to datetime (defaults to today)"
+    def log
+      pick_app do |app|
+        interaction :logstail, Log.new(app, options)
+      end
+    end
 
     desc "redeploy", "trigger the app redeployment"
     option :force, type: 'boolean', aliases: '-f', desc: "use the force Luke!"
