@@ -1,1 +1,1 @@
--cfs -r spec_helper
+-c -f p -r spec_helper
