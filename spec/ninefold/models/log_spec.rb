@@ -32,10 +32,10 @@ describe "Ninefold::Log" do
   end
 
   context "#fetch" do
-    let(:logs_url) { "/apps/#{app.id}/logs?search=love" }
+    let(:logs_url) { "/apps/#{app.id}/logs?tags=rails&search=love" }
     let(:query) { log.fetch }
 
-    before { log.options = {search: "love"} }
+    before { log.options = {search: "love", source: "rails"} }
     before { host.respond_to(logs_url).with(:ok, {logs: [entry_attrs]}) }
 
     it "makes query to the host" do
@@ -67,14 +67,19 @@ describe "Ninefold::Log" do
     end
 
     it "escapes the values" do
-      log.options = {search: "weird & stuff"}
-      expect(log.query_params).to eq "search=weird+%26+stuff"
+      log.options = {source: "rails", search: "weird & stuff"}
+      expect(log.query_params).to eq "tags=rails&search=weird+%26+stuff"
     end
 
     it "exports dates into JSON compatible format" do
       from = Time.now - 2000; to = Time.now + 2000
-      log.options = {from: from, to: to}
-      expect(log.query_params).to eq "from=#{CGI.escape(from.strftime("%FT%T.%LZ"))}&to=#{CGI.escape(to.strftime("%FT%T.%LZ"))}"
+      log.options = {from: from, to: to, source: "rails"}
+      expect(log.query_params).to eq "from=#{CGI.escape(from.strftime("%FT%T.%LZ"))}&to=#{CGI.escape(to.strftime("%FT%T.%LZ"))}&tags=rails"
+    end
+
+    it "defaults the source list to the default tags" do
+      log.options = {}
+      expect(log.query_params).to eq "tags=access%2Capache%2Casset%2Cbundler%2Ccheflog%2Cerror%2Cmigration%2Crails%2Cssl_request%2Csyslog%2Ctrigger"
     end
   end
 
