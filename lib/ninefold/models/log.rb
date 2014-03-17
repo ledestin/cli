@@ -2,9 +2,11 @@ require "cgi"
 
 module Ninefold
   class Log
-    attr_accessor :app, :options
+    DEFAULT_SOURCE = %w{access apache asset bundler cheflog error migration rails ssl_request syslog trigger}.join(",")
 
-    def initialize(app, options)
+    attr_accessor :app, :options, :entries
+
+    def initialize(app, options={})
       @app     = app
       @options = options
       @host    = Ninefold::Host.inst
@@ -14,10 +16,40 @@ module Ninefold
       @options[:tail] == true
     end
 
+    def add(entries)
+      @entries   ||= []
+      @entry_ids ||= []
+
+      [].tap do |new_entries|
+        entries.each do |entry|
+          if ! @entry_ids.include?(entry["id"])
+            @entry_ids << entry["id"]
+            entry = Entry.new(entry)
+            @entries << entry
+            new_entries << entry
+          end
+        end
+      end
+    end
+
     def fetch(&callback)
       @host.get "/apps/#{@app.id}/logs?#{query_params}" do |response|
-        entries = response[:logs].map{|attrs| Entry.new(attrs) }
-        yield entries if block_given?
+        new_entries = add(response[:logs])
+        yield new_entries if block_given?
+      end
+    end
+
+    def poll(timeout=3.0, &callback)
+      @last_timestamp ||= Time.now - timeout
+      @options[:from] = @last_timestamp
+
+      fetch do |entries|
+        entries.each do |entry|
+          callback.call(entry)
+        end
+
+        sleep timeout
+        poll timeout, &callback
       end
     end
 
@@ -25,8 +57,8 @@ module Ninefold
       params = {
         from:   @options[:from],
         to:     @options[:to],
-        host:   @options[:host],
-        source: @options[:source],
+        hosts:  @options[:host],
+        tags:   @options[:source] || DEFAULT_SOURCE,
         search: @options[:search]
       }.reject! { |_,v| v == nil }
 

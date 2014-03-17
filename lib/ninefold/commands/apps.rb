@@ -1,3 +1,5 @@
+require "date"
+
 module Ninefold
   class Ninefold::Command::App < Ninefold::Command
     desc "list", "list the apps registered to this account"
@@ -31,16 +33,23 @@ module Ninefold
       run_app_command :rake, ([name] + args).join(' ')
     end
 
-    desc "log", "tail logs from your application"
+    desc "logs", "tail logs from your application"
     option :tail,   type: 'boolean', aliases: "-t", desc: "continuously tail the logs"
+    option :host,   type: 'string',  aliases: "-h", desc: "specific host to get data of"
     option :source, type: 'string',  aliases: "-s", desc: "type of logs (rails/asset/bundler/cheflog/error/migration, etc)"
     option :search, type: 'string',  aliases: "-q", desc: "search keywords"
     option :from,   type: 'string',  aliases: "-f", desc: "from datetime (default from the beginning of the day)"
     option :to,     type: 'string',  aliases: "-t", desc: "to datetime (defaults to today)"
-    def log
+    def logs
+      options[:from] = DateTime.parse(options[:from]) if options[:from]
+      options[:to]   = DateTime.parse(options[:to])   if options[:to]
+
       pick_app do |app|
         interaction :logstail, Log.new(app, options)
       end
+
+    rescue ArgumentError => e
+      error e # datetime parsing error
     end
 
     desc "redeploy", "trigger the app redeployment"

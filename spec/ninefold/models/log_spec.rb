@@ -33,7 +33,7 @@ describe "Ninefold::Log" do
 
   context "#fetch" do
     let(:logs_url) { "/apps/#{app.id}/logs?search=love" }
-    let(:query) { log.fetch { |entries| @entries = entries } }
+    let(:query) { log.fetch }
 
     before { log.options = {search: "love"} }
     before { host.respond_to(logs_url).with(:ok, {logs: [entry_attrs]}) }
@@ -44,7 +44,7 @@ describe "Ninefold::Log" do
     end
 
     context "entries" do
-      let(:entries) { query && @entries }
+      let(:entries) { query && log.entries }
 
       it "is an array of one" do
         expect(entries).to be_an Array
@@ -63,7 +63,7 @@ describe "Ninefold::Log" do
   context "#query_params" do
     it "merges options into a query string" do
       log.options = {source: "rails", search: "love"}
-      expect(log.query_params).to eq "source=rails&search=love"
+      expect(log.query_params).to eq "tags=rails&search=love"
     end
 
     it "escapes the values" do
