@@ -39,6 +39,7 @@ module Ninefold
     end
 
   protected
+
     def require_user
       if ! user.signed_in?
         invoke 'ninefold:command:user:signin'
@@ -66,6 +67,88 @@ module Ninefold
       Ninefold::Interaction.const_get(name.to_s.capitalize)
         .new(self, self, user, Ninefold::Preferences)
         .run(*args, &block)
+    end
+
+    def show_spinner
+      return if Ninefold::Stdio.robot_mode
+
+      @brutus ||= Ninefold::Brutus.new
+      @brutus.show
+    end
+
+    def hide_spinner
+      @brutus.hide if @brutus
+    end
+
+    def load_apps(&block)
+      title "Requesting your apps list..."
+      show_spinner
+
+      App.load do |apps|
+        hide_spinner
+
+        block.call apps
+      end
+    end
+
+    def pick_app(&block)
+      require_user
+
+      if app = app_from_dot_ninefold_file || app_from_env_id
+        block.call app
+      else
+        load_apps do |apps|
+          if app = interaction(:pickapp, apps)
+            save_app_in_dot_ninefold_file(app)
+            block.call app
+          end
+        end
+      end
+    end
+
+    def run_app_command(name, *args, &block)
+      pick_app do |app|
+        title "Signing you in..."
+        show_spinner
+
+        app.__send__(name, *args, options[:public_key]) do |host, command|
+          hide_spinner
+
+          Ninefold::Runner.new(host, command)
+        end
+      end
+    end
+
+    def app_from_env_id
+      Ninefold::App.new('id' => ENV['APP_ID']) if ENV['APP_ID']
+    end
+
+    def app_from_dot_ninefold_file
+      return nil # FIXME disabled for now, until we figure what to do with it
+      if config = Ninefold::Config.read("#{Dir.pwd}/.ninefold")
+        Ninefold::App.new(config['app']) if config['app']
+      end
+    end
+
+    def save_app_in_dot_ninefold_file(app)
+      return nil # FIXME disabled for now, until we figure what to do with it
+      if app.repo == current_rails_app_git_url
+        Ninefold::Config.new("#{Dir.pwd}/.ninefold").write(app: app.attributes)
+      end
+    end
+
+    def current_rails_app_git_url
+      marker_files  = ["Gemfile.lock", ".git/config", "app/controllers/application_controller.rb"]
+      its_rails_app = marker_files.map { |f| File.exists?("#{Dir.pwd}/#{f}") }.all?
+
+      if its_rails_app
+        git_config = Ninefold::Config.read("#{Dir.pwd}/.git/config")
+        git_config.each do |group, params|
+          params.each do |key, value|
+            return value if key == 'url'
+          end
+        end
+      end
     end
   end
 end
