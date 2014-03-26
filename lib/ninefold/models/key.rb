@@ -6,7 +6,7 @@ module Ninefold
 
     def self.read(location=nil)
       location ||= "~/.ssh/id_rsa.pub"
-      File.read(location.sub(/\A~\//, "#{Dir.home}/"))
+      File.read(location.sub(/\A~\//, "#{Dir.home}/")).gsub(/\s*\n\s*/, '').strip
     rescue Errno::ENOENT => e
       raise NotFound
     end
