@@ -84,7 +84,7 @@ module Ninefold
       title "Requesting your apps list..."
       show_spinner
 
-      App.load do |apps|
+      Ninefold::App.load do |apps|
         hide_spinner
 
         block.call apps
@@ -111,10 +111,10 @@ module Ninefold
         title "Signing you in..."
         show_spinner
 
-        app.__send__(name, *args, options[:public_key]) do |host, command|
+        tunel = Ninefold::Tunel.new(app, options[:public_key])
+        tunel.run(name, *args) do |host, command|
           hide_spinner
-
-          Ninefold::Runner.new(host, command)
+          block.call(tunel, host, command) if block
         end
       end
     end
