@@ -1,4 +1,5 @@
 # Runs stuff on remote hosts via ssh
+require "shellwords"
 
 module Ninefold
   class Tunel
@@ -14,6 +15,17 @@ module Ninefold
         print  "\e[90mStarting the process, press ctrl+d when you're done:\e[0m\n"
         system "ssh -oStrictHostKeyChecking=no #{host} -t '#{command}'"
       end
+    end
+
+    def push(local_filename, remote_filename, host)
+      host, port = host.match(/(.+?) -p (\d+)/).to_a.slice(1,2)
+
+      print "\e[36mUploading #{local_filename} -> #{host.split('@').last}\e[0m\n"
+
+      remote_filename = "#{host}:#{Shellwords.escape(remote_filename)}"
+      local_filename  = Shellwords.escape(local_filename)
+
+      system "scp -o stricthostkeychecking=no -P #{port} #{local_filename} #{remote_filename}"
     end
 
     def print(str)

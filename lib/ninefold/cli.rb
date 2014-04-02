@@ -18,6 +18,9 @@ module Ninefold
     desc "app SUBCOMMAND", "manage your apps"
     subcommand "app", Ninefold::Command::App
 
+    desc "db SUBCOMMAND", "manage your databases"
+    subcommand "db", Ninefold::Command::Db
+
     desc "brutus SUBCOMMAND", "make Brutus do things"
     subcommand "brutus", Ninefold::Command::Brutus
   end
