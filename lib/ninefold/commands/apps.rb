@@ -35,11 +35,11 @@ module Ninefold
 
     desc "logs", "tail logs from your application"
     option :tail,   type: 'boolean', aliases: "-t", desc: "continuously tail the logs"
-    option :host,   type: 'string',  aliases: "-h", desc: "specific host to get data of"
-    option :source, type: 'string',  aliases: "-s", desc: "type of logs (rails/asset/bundler/cheflog/error/migration, etc)"
-    option :search, type: 'string',  aliases: "-q", desc: "search keywords"
-    option :from,   type: 'string',  aliases: "-f", desc: "from datetime (default from the beginning of the day)"
-    option :to,     type: 'string',  aliases: "-t", desc: "to datetime (defaults to today)"
+    option :host,   type: 'string',  aliases: "-H", desc: "specific host to get data of"
+    option :logs,   type: 'string',  aliases: "-l", desc: "type of logs (rails/asset/bundler/cheflog/error/migration, etc)"
+    option :search, type: 'string',  aliases: "-f", desc: "search keywords"
+    option :from,   type: 'string',                 desc: "from datetime (default from the beginning of the day)"
+    option :to,     type: 'string',                 desc: "to datetime (defaults to today)"
     def logs
       options[:from] = DateTime.parse(options[:from]) if options[:from]
       options[:to]   = DateTime.parse(options[:to])   if options[:to]

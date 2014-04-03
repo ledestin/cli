@@ -2,7 +2,7 @@ require "cgi"
 
 module Ninefold
   class Log
-    DEFAULT_SOURCE = %w{access apache asset bundler cheflog error migration rails ssl_request syslog trigger}.join(",")
+    DEFAULT_LOGS = %w{access apache asset bundler cheflog error migration rails ssl_request syslog trigger}.join(",")
 
     attr_accessor :app, :options, :entries
 
@@ -58,7 +58,7 @@ module Ninefold
         from:   @options[:from],
         to:     @options[:to],
         hosts:  @options[:host],
-        tags:   @options[:source] || DEFAULT_SOURCE,
+        tags:   @options[:logs] || DEFAULT_LOGS,
         search: @options[:search]
       }.reject! { |_,v| v == nil }
 
