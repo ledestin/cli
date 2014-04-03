@@ -1,0 +1,33 @@
+_ninefold() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD-1]}
+
+  case "$prev" in
+    app)
+      COMPREPLY=( $(compgen -W "help console dbconsole deploy_status info list logs rake redeploy redeploy_command" -- $cur) )
+      ;;
+
+    db)
+      COMPREPLY=( $(compgen -W "help import" -- $cur) )
+      ;;
+
+    user)
+      COMPREPLY=( $(compgen -W "help signin signout whoami" -- $cur) )
+      ;;
+
+    *)
+      [ "$prev" == "ninefold" ] && \
+      COMPREPLY=( $(compgen -W "help app console dbconsole logs rake signin signout brutus user db whoami" -- $cur) )
+
+      [[ "$cur" == --* ]] && [ "$prev" != "logs" ] && \
+      COMPREPLY=( $(compgen -W "--sure --public-key --robot" -- $cur) )
+
+      [[ "$cur" == -* ]] && [ "$prev" == "logs" ] && \
+      COMPREPLY=( $(compgen -W "--tail --host --logs --search --from --to" -- $cur) )
+      ;;
+
+  esac
+
+}
+
+complete -F _ninefold ninefold
