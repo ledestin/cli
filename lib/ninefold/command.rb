@@ -98,9 +98,16 @@ module Ninefold
         block.call app
       else
         load_apps do |apps|
-          if app = interaction(:pickapp, apps)
-            save_app_in_dot_ninefold_file(app)
-            block.call app
+
+          if apps.count > 1
+            if app = interaction(:pickapp, apps)
+              save_app_in_dot_ninefold_file(app)
+              block.call app
+            end
+          elsif apps.count == 1
+            block.call apps.first
+          else
+            puts "You don't have any apps"
           end
         end
       end
