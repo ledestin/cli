@@ -26,5 +26,9 @@ module Ninefold
 
     desc "webhooks SUBCOMMAND", "manage your webhooks"
     subcommand "webhooks", Ninefold::Command::Webhooks
+
+    desc "backup SUBCOMMAND", "manage your app database backups"
+    subcommand "backup", Ninefold::Command::DatabaseBackup
+
   end
 end

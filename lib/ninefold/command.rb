@@ -66,7 +66,8 @@ module Ninefold
     end
 
     def interaction(name, *args, &block)
-      Ninefold::Interaction.const_get(name.to_s.capitalize)
+      klass = name.to_s.split('_').collect!{ |w| w.capitalize }.join
+      Ninefold::Interaction.const_get(klass)
         .new(self, self, user, Ninefold::Preferences)
         .run(*args, &block)
     end
