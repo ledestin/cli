@@ -1,19 +1,32 @@
-require "date"
-
 module Ninefold
   class Ninefold::Command::Webhooks < Ninefold::Command
+    SERVICES = ['slack']
 
-    desc "create_slack URL", "add slack webhook url to the app"
-    def create_slack(url)
-      pick_app do |app|
-        interaction :addSlackUrl, Webhook.new(app, 'Slack', url)
+    desc "create SERVICE URL", 'add service webhook url to the app. ex: ninefold webhooks create slack "/sample_url"'
+    def create(service, url)
+      available_service(service) do
+        pick_app do |app|
+          interaction :addwebhook, Webhook.new(app, service.capitalize, url)
+        end
       end
     end
 
-    desc "delete_slack", "remove slack webhook url from the app"
-    def delete_slack
-      pick_app do |app|
-        interaction :removeSlackUrl, Webhook.new(app, 'Slack')
+    desc "delete SERVICE", "remove service webhook url from the app. ex: ninefold webhooks delete slack"
+    def delete(service)
+      available_service(service) do
+        pick_app do |app|
+          interaction :removewebhook, Webhook.new(app, service.capitalize)
+        end
+      end
+    end
+
+    private
+
+    def available_service(service, &block)
+      if SERVICES.include? service
+        block.call
+      else
+        error "#{service} is an invalid Service. please select from available services: [#{SERVICES.join(',')}]"
       end
     end
   end

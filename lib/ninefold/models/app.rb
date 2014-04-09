@@ -36,7 +36,7 @@ module Ninefold
 
     def redeploy(force=false, &block)
       host.post "/apps/#{id}/redeploy", force ? {force_redeploy: true} : {} do |response|
-        block.call(response.ok? ? true : false)
+        block.call response.ok?
       end
     end
 
