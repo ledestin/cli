@@ -4,7 +4,7 @@ _ninefold() {
 
   case "$prev" in
     app)
-      COMPREPLY=( $(compgen -W "help console dbconsole deploy_status info list logs rake redeploy redeploy_command" -- $cur) )
+      COMPREPLY=( $(compgen -W "help console dbconsole deploy_status info list logs rake redeploy redeploy_command webhooks" -- $cur) )
       ;;
 
     db)
@@ -13,6 +13,10 @@ _ninefold() {
 
     user)
       COMPREPLY=( $(compgen -W "help signin signout whoami" -- $cur) )
+      ;;
+
+    webhooks)
+      COMPREPLY=( $(compgen -W "help create delete" -- $cur) )
       ;;
 
     *)

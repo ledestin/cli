@@ -13,9 +13,11 @@ module Ninefold
     rescue Interrupt => e
       puts "\n" # do nothing if the user interrupted the programm
     rescue Ninefold::Host::NotFound => e
-      error "Server returned 404"
+      error "Server returned 404. Record is not found"
     rescue Ninefold::Host::AccessDenied => e
       error "Access denied"
+    rescue Ninefold::Host::UnprocessableEntity => e
+      error e
     rescue Ninefold::Host::Unprocessable => e
       error "Something went wrong on the other side"
     rescue Ninefold::Host::Unreachable => e

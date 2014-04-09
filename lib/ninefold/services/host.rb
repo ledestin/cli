@@ -13,10 +13,11 @@ module Ninefold
       end
     end
 
-    class NotFound      < StandardError; end
-    class AccessDenied  < StandardError; end
-    class Unprocessable < StandardError; end
-    class Unreachable   < StandardError; end
+    class NotFound             < StandardError; end
+    class AccessDenied         < StandardError; end
+    class Unprocessable        < StandardError; end
+    class UnprocessableEntity  < StandardError; end
+    class Unreachable          < StandardError; end
 
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
@@ -50,13 +51,14 @@ module Ninefold
     end
 
     def request(method, path, params, &block)
-      result = @conn.__send__ method, "/api/#{@version}#{path}", params do |req|
+      result = @conn.__send__ method, "/api/#{@version}#{path}.json", params do |req|
         req.headers['NFAuthToken'] = @token if @token
       end
 
-      raise NotFound      if result.status == 404
-      raise AccessDenied  if result.status == 403
-      raise Unprocessable if result.status >  404
+      raise NotFound        if result.status == 404
+      raise AccessDenied    if result.status == 403
+      raise UnprocessableEntity.new(JSON.parse(result.body)['messages'].first) if result.status == 422
+      raise Unprocessable   if result.status >  404
 
       Response.new(result).tap do |response|
         block.call(response) if block_given?
