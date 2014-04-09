@@ -23,5 +23,8 @@ module Ninefold
 
     desc "brutus SUBCOMMAND", "make Brutus do things"
     subcommand "brutus", Ninefold::Command::Brutus
+
+    desc "webhooks SUBCOMMAND", "manage your webhooks"
+    subcommand "webhooks", Ninefold::Command::Webhooks
   end
 end
