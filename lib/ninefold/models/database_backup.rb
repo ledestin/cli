@@ -25,12 +25,20 @@ module Ninefold
       end
     end
 
+    def file_name
+      "#{created_at.gsub(':','-').gsub('+00:00','')}.tar.gz"
+    end
+
     def created_at
-      attributes["created_at"]
+      DateTime.iso8601(attributes["created_at"]).to_s
     end
 
     def size
       attributes["size"]
+    end
+
+    def url
+      attributes["url"]
     end
 
     def to_s

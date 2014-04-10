@@ -7,10 +7,17 @@ module Ninefold
       end
     end
 
-    desc "create", "create a database backup app"
+    desc "create", "create a database backup"
     def create
       pick_app do |app|
         interaction :app_create_database_backup, app
+      end
+    end
+
+    desc "download", "download a database backup"
+    def download
+      pick_app do |app|
+        interaction :app_download_database_backup, app
       end
     end
 
