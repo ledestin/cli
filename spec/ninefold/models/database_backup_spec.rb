@@ -3,12 +3,17 @@ require "spec_helper"
 describe Ninefold::DatabaseBackup do
   let(:host)              { Ninefold::Host.inst }
   let(:app)               { double(Ninefold::App, :id => 99) }
-  let(:attrs)             { { 'created_at' => '2014-04-09T04:40:09Z', 'size' => '10KB' } }
+  let(:attrs)             { { 'created_at' => '2014-04-09T04:40:09', 'size' => '10KB' } }
   let(:database_backup)   { Ninefold::DatabaseBackup.new(attrs) }
 
   describe "attributes" do
     it "sets attrs" do
-      expect(database_backup.created_at).to eq attrs['created_at']
+      expect(database_backup.created_at).to include attrs['created_at']
+    end
+
+    it "file_name" do
+      expect(database_backup.file_name).to be
+      expect(database_backup.file_name).to include("tar.gz")
     end
   end
 
