@@ -8,7 +8,8 @@ module Ninefold
         hide_spinner
 
         app.attributes.each do |key, value|
-          puts "#{key.capitalize.ljust(9)} #{value}"
+          display_key = (key == 'deployed_sha' ? 'Deployed SHA' : key.capitalize)
+          puts "#{display_key.ljust(15)} #{value}"
         end
       end
     end
