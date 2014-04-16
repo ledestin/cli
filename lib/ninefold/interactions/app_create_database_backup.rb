@@ -1,7 +1,7 @@
 module Ninefold
   class Interaction::AppCreateDatabaseBackup < Ninefold::Interaction
     def run(app)
-      title "Creating database back for #{app.name} ..."
+      title "Creating database backup ..."
       show_spinner
 
       Ninefold::DatabaseBackup.create(app) do |success|
