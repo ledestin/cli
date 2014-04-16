@@ -28,12 +28,12 @@ module Ninefold
       run_app_command :dbconsole
     end
 
-    desc "rake", "run rake tesks in an app"
+    desc "rake", "run rake tasks in an app"
     def rake(name, *args)
       run_app_command :rake, ([name] + args).join(' ')
     end
 
-    desc "logs", "tail logs from your application"
+    desc "logs", "access logs from your application"
     option :tail,   type: 'boolean', aliases: "-t", desc: "continuously tail the logs"
     option :host,   type: 'string',  aliases: "-H", desc: "specific host to get data of"
     option :logs,   type: 'string',  aliases: "-l", desc: "type of logs (rails/asset/bundler/cheflog/error/migration, etc)"
