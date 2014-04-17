@@ -35,12 +35,13 @@ module Ninefold
     ]
 
     def self.say(text)
-      text = text.split("\n")
-      maxl = (text.map{|s| s.size } + [20]).max
-      maxl = maxl - 1 if maxl % 2 != 1
+      text = text.gsub('\n', "\n").split("\n").map(&:strip)
+      maxl = text.map{|s| s.size }.max
+      maxl = maxl < 20 ? maxl % 2 == 1 ? 21 : 20 : maxl
       size = 14 # brutus mouth offset
 
       text = text.map do |line|
+        puts line.center(maxl).inspect + ": #{line.center(maxl).length}, #{maxl}"
         " | #{line.center(maxl)} |"
       end
 
