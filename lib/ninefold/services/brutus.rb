@@ -2,72 +2,41 @@
 
 module Ninefold
   class Brutus
-    SPRITES = [
+    SCENE = %Q{
+
+                          \e[33m☀︎\e[0m
+
+
+                      \e[31m✿\e[0m
+    \e[32m"'‟"'″”'‟"″'”"″'"'‟"'‟"'″”'‟"″'”"″'"'‟"'‟"'″”'‟"″'”"″'"'‟″'"‟"″'”"″'"'‟\e[0m
+    }
+
+    CHEWING = [
       %Q{
-                (___)     \e[33m☀︎\e[0m
+                (___)
           """""" . ‟
         |" """""/ ⁃
-         "||""||  "    \e[31m✿\e[0m
-      \e[32m"'‟"'‟"'""'‟"'‟"'""'‟"'‟"'\e[0m
-
+         "||""||  "
       }, %Q{
-                (___)     \e[33m☀︎\e[0m
+                (___)
           """""" . ‟
         |" """""/ _
-         "||""||  "    \e[31m✿\e[0m
-      \e[32m"'‟"'‟"'""'‟"'‟"'""'‟"'‟"'\e[0m
-
+         "||""||  "
       }, %Q{
-                          \e[33m☀︎\e[0m
+
           """"""(___)
         /" """"" . ‟
-         "||""||  ⁃    \e[31m✿\e[0m
-      \e[32m"'‟"'‟"'""'‟"'‟"'""'‟"'‟"'\e[0m
-
+         "||""||  ⁃
       }, %Q{
-                          \e[33m☀︎\e[0m
+
           """"""(___)
         |" """"" . ‟
-         "||""||  -    \e[31m✿\e[0m
-      \e[32m"'‟"'‟"'""'‟"'‟"'""'‟"'‟"'\e[0m
-
+         "||""||  -
       }
     ]
 
-    def self.say(text)
-      text = text.gsub('\n', "\n").split("\n").map(&:strip)
-      maxl = text.map{|s| s.size }.max
-      maxl = maxl < 20 ? maxl % 2 == 1 ? 21 : 20 : maxl
-      size = 14 # brutus mouth offset
-
-      text = text.map do |line|
-        puts line.center(maxl).inspect + ": #{line.center(maxl).length}, #{maxl}"
-        " | #{line.center(maxl)} |"
-      end
-
-      text = [
-        "  #{'-' * (maxl + 2)}",
-        text.join("\n"),
-        "  #{'-' * size} #{'-' * (maxl - size + 1)}",
-        "  #{' ' * size}V"
-      ]
-
-      text = "\e[35m#{text.join("\n")}\e[0m"
-
-      puts text + SPRITES[0].gsub("\n      ", "\n").gsub(/\s*\Z/, '')
-    end
-
-    def initialize
-      @munch_0 = sprite(0)
-      @munch_1 = sprite(1)
-      @bites_0 = sprite(2)
-      @bites_1 = sprite(3)
-
-      @sprites = [@munch_0, @munch_1, @munch_0, @munch_1, @bites_0, @bites_1]
-    end
-
     def show
-      @spinner = Thread.new { chill }
+      @spinner = Thread.new { chew }
     end
 
     def hide
@@ -83,8 +52,9 @@ module Ninefold
       end
     end
 
-    def chill
+    def chew
       @i = 0;
+      @sprites = chewing_sprites
 
       print_blank_canvas
 
@@ -97,7 +67,77 @@ module Ninefold
       end
     end
 
+    def say(text)
+      text = text.gsub('\n', "\n").split("\n").map(&:strip)
+      maxl = text.map{|s| s.size }.max
+      maxl = maxl < 20 ? maxl % 2 == 1 ? 21 : 20 : maxl
+      size = 14 # brutus mouth offset
+
+      text = text.map do |line|
+        " | #{line.center(maxl)} |"
+      end
+
+      text = [
+        "  #{'-' * (maxl + 2)}",
+        text.join("\n"),
+        "  #{'-' * size} #{'-' * (maxl - size + 1)}",
+        "  #{' ' * size}V"
+      ]
+
+      text = "\e[35m#{text.join("\n")}\e[0m\n"
+
+      puts text + build_sprite(CHEWING[0], maxl + 5)
+    end
+
+    def build_sprite(frame, frame_width=nil)
+      frame = clean_sprite(frame)
+      scene = clean_sprite(SCENE)
+
+      frame = frame.split("\n").map{|l| "  #{l}"}.join("\n")
+      frame = merge_sprites(scene, frame)
+
+      trim_grass frame, frame_width
+    end
+
   protected
+
+    def chewing_sprites
+      munch_0 = build_sprite(CHEWING[0])
+      munch_1 = build_sprite(CHEWING[1])
+      bites_0 = build_sprite(CHEWING[2])
+      bites_1 = build_sprite(CHEWING[3])
+
+      [munch_0, munch_1, munch_0, munch_1, bites_0, bites_1]
+    end
+
+    def merge_sprites(background, foreground)
+      background = background.split("\n")
+      foreground = foreground.split("\n")
+
+      foreground.reverse.each_with_index do |line, index|
+        line_size  = real_size(line)
+        line_index = background.size - index - 2
+
+        background[line_index] = line + (background[line_index].slice(line_size, 100) || "")
+      end
+
+      background.join("\n")
+    end
+
+    def trim_grass(sprite, frame_width)
+      lines = sprite.split("\n")
+      grass = lines.pop
+      max_l = frame_width || lines.map { |line| real_size(line) }.max
+      lines = lines.map { |line| line + " " * (max_l - real_size(line)) }
+
+      lines.join("\n") + "\n" + grass.slice(0, max_l + 7) + "\e[0m\n"
+    end
+
+    def real_size(string)
+      string.gsub(/\e\[[\d;]+m/, '').each_char.inject(0) do |c, char|
+        c += 1 unless char=~/\p{Mn}/ ; c
+      end
+    end
 
     def print(sprite)
       move_caret_back
@@ -116,10 +156,11 @@ module Ninefold
       @sprites[0].split("\n").size
     end
 
-    def sprite(id)
-      text   = SPRITES[id].gsub(/\A[ \t]*\n/, '').gsub(/\n[ \t]*\Z/, '')
+    def clean_sprite(text)
+      text   = text.gsub(/\A[ \t]*\n/, '').gsub(/\n[ \t]*\Z/, '')
       indent = text.scan(/^[ \t]*(?=\S)/).min.size || 0
-      text.gsub(/^[ \t]{#{indent}}/, '').gsub("\n", " " * 40 + "\n")
+      text   = text.gsub(/^[ \t]{#{indent}}/, '').gsub("\n", " " * 40 + "\n")
+      text.split("\n").map{|line| line.gsub(/\s+\Z/, '')}.join("\n")
     end
   end
 end
