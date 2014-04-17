@@ -2,7 +2,7 @@ module Ninefold
   class Webhook
     include Ninefold::Host::Access
 
-    attr_reader :service
+    attr_reader :service, :url
 
     def initialize(app, service, url=nil)
       @app     = app
@@ -19,6 +19,13 @@ module Ninefold
     def delete(&block)
       host.delete "/apps/#{@app.id}/webhooks/#{@service}" do |response|
         block.call response.ok?
+      end
+    end
+
+    def show(&block)
+      host.get "/apps/#{@app.id}/webhooks/#{@service}" do |response|
+        @url = response['webhook']['url'] if response['webhook']
+        block.call(self) if block_given?
       end
     end
 

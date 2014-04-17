@@ -62,4 +62,25 @@ describe "Ninefold::Webhook" do
       @success.should be_false
     end
   end
+
+  context '#show' do
+    let(:service) { 'Slack' }
+    let(:url)     { '/sample' }
+    let(:webhook_details)  {{ 'webhook' => { 'service' => service, 'url' => url } }}
+    let(:org_webhook) { Ninefold::Webhook.new(app, service) }
+
+    it "assigns the new url" do
+      host.respond_to("/apps/#{app.id}/webhooks/#{service}").with(:ok, webhook_details)
+      org_webhook.url.should be_nil
+      org_webhook.show
+      org_webhook.url.should == url
+    end
+
+    it "errors when not found" do
+      host.respond_to("/apps/#{app.id}/webhooks/#{service}").with(:fail)
+      org_webhook.url.should be_nil
+      org_webhook.show
+      org_webhook.url.should be_nil
+    end
+  end
 end
