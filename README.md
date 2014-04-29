@@ -1,6 +1,6 @@
 # Ninefold CLI [![Build Status](https://travis-ci.org/ninefold/cli.png)](https://travis-ci.org/ninefold/cli) [![Code Climate](https://codeclimate.com/github/ninefold/cli.png)](https://codeclimate.com/github/ninefold/cli)
 
-This package is the official ninefold.com CLI. The CLI allows you to access the rails console, logging, run rake tasks, and more. 
+This package is the official ninefold.com CLI. The Ninefold CLI allows you to access the rails console, logging, run rake tasks, and more. 
 
 ## Installation
 
