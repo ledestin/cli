@@ -1,17 +1,17 @@
 module Ninefold
   class Command::Db < Ninefold::Command
-    desc "import FILENAME", "import a database dump"
-    def import(filename)
-      if File.exists?(filename)
-        tmp_filename = "/tmp/db-import-#{Time.now.to_i}.sql"
+    # desc "import FILENAME", "import a database dump"
+    # def import(filename)
+    #   if File.exists?(filename)
+    #     tmp_filename = "/tmp/db-import-#{Time.now.to_i}.tar.gz"
 
-        run_app_command :dbimport, tmp_filename do |tonel, host|
-          tonel.push filename, tmp_filename, host
-        end
-      else
-        error "Could not find a file named: #{filename}"
-      end
-    end
+    #     run_app_command :dbimport, tmp_filename do |tonel, host|
+    #       tonel.push filename, tmp_filename, host
+    #     end
+    #   else
+    #     error "Could not find a file named: #{filename}"
+    #   end
+    # end
 
     desc "backups", "list the database backups for this app"
     def backups
@@ -33,7 +33,5 @@ module Ninefold
         interaction :app_download_database_backup, app
       end
     end
-
-
   end
 end
