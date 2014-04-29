@@ -8,7 +8,7 @@ _ninefold() {
       ;;
 
     db)
-      COMPREPLY=( $(compgen -W "help import" -- $cur) )
+      COMPREPLY=( $(compgen -W "help backups backup download" -- $cur) )
       ;;
 
     user)
