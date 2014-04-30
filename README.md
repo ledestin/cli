@@ -1,6 +1,6 @@
 # Ninefold CLI [![Build Status](https://travis-ci.org/ninefold/cli.png)](https://travis-ci.org/ninefold/cli) [![Code Climate](https://codeclimate.com/github/ninefold/cli.png)](https://codeclimate.com/github/ninefold/cli)
 
-This package is the official ninefold.com CLI
+This package is the official ninefold.com CLI. The Ninefold CLI allows you to access the rails console, logging, run rake tasks, and more. 
 
 ## Installation
 
@@ -21,6 +21,11 @@ Then run the following to get the list of the `app` related commands
 
     ninefold app help
 
+## Updates
+
+Ninefold frequently updates the CLI with new features. Before running the CLI, we recommend that you update your version of the gem. 
+
+	gem update ninefold
 
 ## Binding An App
 
