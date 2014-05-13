@@ -32,7 +32,7 @@ describe "Ninefold::Log" do
   end
 
   context "#fetch" do
-    let(:logs_url) { "/apps/#{app.id}/logs?tags=rails&search=love" }
+    let(:logs_url) { "/apps/#{app.id}/logs.json?tags=rails&search=love" }
     let(:query) { log.fetch }
 
     before { log.options = {search: "love", logs: "rails"} }

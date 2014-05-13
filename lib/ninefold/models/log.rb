@@ -33,7 +33,7 @@ module Ninefold
     end
 
     def fetch(&callback)
-      @host.get "/apps/#{@app.id}/logs?#{query_params}" do |response|
+      @host.get "/apps/#{@app.id}/logs.json?#{query_params}" do |response|
         new_entries = add(response[:logs])
         yield new_entries if block_given?
       end
