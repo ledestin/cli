@@ -14,7 +14,7 @@ module Ninefold
       end
     end
 
-    attr_reader :attributes
+    attr_reader :attributes, :deployment_id
 
     def initialize(attributes={})
       @attributes = attributes
@@ -42,12 +42,19 @@ module Ninefold
 
     def deploy_status(&block)
       host.get "/apps/#{id}/deploy_status" do |response|
+        @deployment_id = response['deployment_id']
         block.call response['status']
       end
     end
 
     def to_s
       "##{id} #{name}"
+    end
+
+    def deploy_log
+      if deployment_id
+        @log ||= Ninefold::Log.new(self, :logs => "checkpoint#{deployment_id}")
+      end
     end
   end
 end

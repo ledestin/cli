@@ -51,7 +51,8 @@ module Ninefold
     end
 
     def request(method, path, params, &block)
-      result = @conn.__send__ method, "/api/#{@version}#{path}.json", params do |req|
+      path = "#{path}.json" unless path.include?(".json")
+      result = @conn.__send__ method, "/api/#{@version}#{path}", params do |req|
         req.headers['NFAuthToken'] = @token if @token
       end
 
