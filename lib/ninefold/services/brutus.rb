@@ -53,18 +53,7 @@ module Ninefold
     end
 
     def chew
-      @i = 0;
-      @sprites = chewing_sprites
-
-      print_blank_canvas
-
-      while true
-        @i = 0 if ! @sprites[@i]
-
-        print(@sprites[@i]); @i += 1
-
-        sleep 0.5
-      end
+      loop chewing_sprites
     end
 
     def say(text)
@@ -100,6 +89,17 @@ module Ninefold
     end
 
   protected
+
+    def loop(sprites)
+      @sprites = sprites.map{|s| [s,s] }.flatten
+      print_blank_canvas
+
+      while true
+        @i = 0 if ! @i || ! @sprites[@i]
+        print(@sprites[@i]); @i += 1
+        sleep 0.25
+      end
+    end
 
     def chewing_sprites
       munch_0 = build_sprite(CHEWING[0])
