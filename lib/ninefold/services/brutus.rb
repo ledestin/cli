@@ -4,7 +4,7 @@ module Ninefold
   class Brutus
     SCENE = %Q{
 
-                          \e[33m☀︎\e[0m
+                          \e[33m☀\e[0m
 
 
                       \e[31m✿\e[0m
@@ -141,6 +141,11 @@ module Ninefold
 
     def print(sprite)
       move_caret_back
+
+      if (ARGV & %w[ --magic -m ]).any?
+        sprite = add_magic(sprite)
+      end
+
       STDOUT.print sprite
     end
 
@@ -161,6 +166,19 @@ module Ninefold
       indent = text.scan(/^[ \t]*(?=\S)/).min.size || 0
       text   = text.gsub(/^[ \t]{#{indent}}/, '').gsub("\n", " " * 40 + "\n")
       text.split("\n").map{|line| line.gsub(/\s+\Z/, '')}.join("\n")
+    end
+
+    def add_magic(sprite)
+      clean_sprite = sprite.gsub(/\e\[\d+m/, '')
+
+      clean_sprite.split("").map do |char|
+        "\e[#{random_color}m#{char}"
+      end.join("") + "\e[0m"
+    end
+
+    def random_color
+      colors = [31,32,33,34,35,36,37]
+      colors[rand(0..colors.size)]
     end
   end
 end

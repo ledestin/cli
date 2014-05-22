@@ -5,6 +5,7 @@ module Ninefold
     class_option :sure, type: 'boolean', aliases: '-s', desc: "don't ask for confirmation"
     class_option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
     class_option :robot, type: 'boolean', aliases: '-q', desc: 'plain black and white mode without animations'
+    class_option :magic, type: 'boolean', aliases: '-m', desc: 'add magic and rainbows'
 
     def self.start(*args)
       Ninefold::Stdio.robot_mode (ARGV & ['--no-brutus', '--robot']).size > 0
