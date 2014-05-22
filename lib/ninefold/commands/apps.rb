@@ -65,7 +65,7 @@ module Ninefold
     desc "redeploy_command", "print a redeploy command for CI"
     def redeploy_command
       pick_app do |app|
-        puts "AUTH_TOKEN=#{user.token} APP_ID=#{app.id} ninefold app redeploy --robot"
+        puts "AUTH_TOKEN=#{user.token} APP_ID=#{app.id} ninefold app redeploy --robot --sure"
       end
     end
 
