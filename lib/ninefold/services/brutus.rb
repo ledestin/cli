@@ -57,26 +57,14 @@ module Ninefold
     end
 
     def say(text)
-      text = text.gsub('\n', "\n").split("\n").map(&:strip)
-      maxl = text.map{|s| s.size }.max
-      maxl = maxl < 20 ? maxl % 2 == 1 ? 21 : 20 : maxl
-      size = 14 # brutus mouth offset
+      text = build_blob(text)
+      maxl = text.split("\n").map(&:size).max
+      brut = build_sprite(CHEWING[0], maxl)
 
-      text = text.map do |line|
-        " | #{line.center(maxl)} |"
-      end
-
-      text = [
-        "  #{'-' * (maxl + 2)}",
-        text.join("\n"),
-        "  #{'-' * size} #{'-' * (maxl - size + 1)}",
-        "  #{' ' * size}V"
-      ]
-
-      text = "\e[35m#{text.join("\n")}\e[0m\n"
-
-      puts text + build_sprite(CHEWING[0], maxl + 5)
+      print "\e[35m#{ text }\e[0m\n#{brut}\n"
     end
+
+  protected
 
     def build_sprite(frame, frame_width=nil)
       frame = clean_sprite(frame)
@@ -88,7 +76,25 @@ module Ninefold
       trim_grass frame, frame_width
     end
 
-  protected
+    def build_blob(text)
+      text, maxl = cleanup_text(text)
+      size = 14 # brutus mouth offset
+
+      text = text.map { |line| " | #{line.center(maxl)} |" }.join("\n")
+
+      "  #{'-' * (maxl + 2)}\n" +
+      text + "\n" +
+      "  #{'-' * size} #{'-' * (maxl - size + 1)}\n"+
+      "  #{' ' * size}V"
+    end
+
+    def cleanup_text(text)
+      text = text.split("\n").map(&:strip)
+      maxl = text.map{|s| s.size }.max
+      maxl = maxl < 20 ? maxl % 2 == 1 ? 21 : 20 : maxl
+
+      [text, maxl]
+    end
 
     def loop(sprites)
       @sprites = sprites.map{|s| [s,s] }.flatten
@@ -96,6 +102,7 @@ module Ninefold
 
       while true
         @i = 0 if ! @i || ! @sprites[@i]
+        move_caret_back
         print(@sprites[@i]); @i += 1
         sleep 0.25
       end
@@ -139,14 +146,12 @@ module Ninefold
       end
     end
 
-    def print(sprite)
-      move_caret_back
-
+    def print(text)
       if (ARGV & %w[ --magic -m ]).any?
-        sprite = add_magic(sprite)
+        text = add_magic(text)
       end
 
-      STDOUT.print sprite
+      STDOUT.print text
     end
 
     def print_blank_canvas

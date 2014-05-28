@@ -17,10 +17,8 @@ module Ninefold
       error "Server returned 404. Record is not found"
     rescue Ninefold::Host::AccessDenied => e
       error "Access denied"
-    rescue Ninefold::Host::UnprocessableEntity => e
-      error e
     rescue Ninefold::Host::Unprocessable => e
-      error "Something went wrong on the other side"
+      error e.message || "Something went wrong on the other side"
     rescue Ninefold::Host::Unreachable => e
       error "Could not reach the host"
     rescue Ninefold::Key::NotFound => e

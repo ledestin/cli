@@ -16,7 +16,6 @@ module Ninefold
     class NotFound             < StandardError; end
     class AccessDenied         < StandardError; end
     class Unprocessable        < StandardError; end
-    class UnprocessableEntity  < StandardError; end
     class Unreachable          < StandardError; end
 
     DEFAULT_NAME = "portal.ninefold.com"
@@ -56,10 +55,7 @@ module Ninefold
         req.headers['NFAuthToken'] = @token if @token
       end
 
-      raise NotFound        if result.status == 404
-      raise AccessDenied    if result.status == 403
-      raise UnprocessableEntity.new(JSON.parse(result.body)['messages'].first) if result.status == 422
-      raise Unprocessable   if result.status >  404
+      handle_http_errors result
 
       Response.new(result).tap do |response|
         block.call(response) if block_given?
@@ -67,6 +63,15 @@ module Ninefold
 
     rescue Faraday::Error::ClientError => e
       raise Unreachable
+    end
+
+    def handle_http_errors(result)
+      case result.status
+      when 404 then raise NotFound
+      when 403 then raise AccessDenied
+      when 422 then raise Unprocessable.new JSON.parse(result.body)['messages'].first
+      when 405..500 then raise Unprocessable
+      end
     end
 
     class Response
