@@ -34,8 +34,19 @@ module Ninefold
 
     desc "download", "download a database backup"
     def download
+      pick_backup do |backup, app|
+        title "Downloading backup #{backup.created_at}"
+        system("curl '#{backup.url}' > #{backup.file_name}")
+      end
+    end
+
+  protected
+
+    def pick_backup(&block)
       pick_app do |app|
-        interaction :app_download_database_backup, app
+        interaction :pickbackup, app do |backup|
+          block.call(backup, app)
+        end
       end
     end
   end
