@@ -2,6 +2,8 @@ require "date"
 
 module Ninefold
   class Ninefold::Command::App < Ninefold::Command
+    command_alias dbconsole: 'db:console'
+
     desc "list", "list the apps registered to this account"
     def list
       require_user
@@ -21,11 +23,6 @@ module Ninefold
     desc "console", "run the rails console on an app"
     def console
       run_app_command :console
-    end
-
-    desc "dbconsole", "run the rails dbconsole"
-    def dbconsole
-      run_app_command :dbconsole
     end
 
     desc "rake", "run rake tasks in an app"

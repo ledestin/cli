@@ -5,9 +5,11 @@ module Ninefold
     command_alias whoami:    'user:whoami'
 
     command_alias console:   'app:console'
-    command_alias dbconsole: 'app:dbconsole'
+
     command_alias rake:      'app:rake'
     command_alias logs:      'app:logs'
+    
+    command_alias dbconsole: 'db:console'
 
     desc "user SUBCOMMAND", "manage user credentials"
     subcommand "user", Ninefold::Command::User

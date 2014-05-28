@@ -13,6 +13,11 @@ module Ninefold
     #   end
     # end
 
+    desc "console", "runs db console"
+    def console
+      run_app_command :dbconsole
+    end
+
     desc "backups", "list the database backups for this app"
     def backups
       pick_app do |app|
