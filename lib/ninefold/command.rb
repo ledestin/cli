@@ -120,7 +120,7 @@ module Ninefold
 
     def run_app_command(name, *args, &block)
       pick_app do |app|
-        title "Signing you in..."
+        title "Signing you onto the box..."
         show_spinner
 
         tunel = Ninefold::Tunel.new(app, options[:public_key])
