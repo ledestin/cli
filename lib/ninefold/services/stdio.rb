@@ -129,6 +129,10 @@ module Ninefold
       say "✔︎  #{text}", :green
     end
 
+    def fail(text="Failed")
+      say "✖︎  #{text}", :red
+    end
+
     def show_spinner
       return if Ninefold::Stdio.robot_mode
 

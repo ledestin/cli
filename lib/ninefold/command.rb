@@ -107,6 +107,7 @@ module Ninefold
               block.call app
             end
           elsif apps.count == 1
+            say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
             block.call apps.first
           else
             puts "You don't have any apps"

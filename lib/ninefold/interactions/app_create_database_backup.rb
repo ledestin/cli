@@ -1,16 +1,16 @@
 module Ninefold
   class Interaction::AppCreateDatabaseBackup < Ninefold::Interaction
     def run(app)
-      title "Creating database backup ..."
+      title "Scheduling the database backup ..."
       show_spinner
 
       Ninefold::DatabaseBackup.create(app) do |success|
         hide_spinner
 
         if success
-          puts "Backup complete for #{app.name}"
+          done "The backup was successfully scheduled. It should appear on the list of backups in a few minutes"
         else
-          puts "Backup failed for #{app.name}"
+          fail "Failed to schedule the backup"
         end
       end
     end

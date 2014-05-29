@@ -25,6 +25,16 @@ module Ninefold
       end
     end
 
+    def self.restore(app, backup, &block)
+      Ninefold::Host.inst.post "/apps/#{app.id}/database/backups/#{backup.id}/restore" do |response|
+        block.call response.ok?
+      end
+    end
+
+    def id
+      attributes['id']
+    end
+
     def file_name
       "#{created_at.gsub(':','-').gsub('+00:00','')}.tar.gz"
     end

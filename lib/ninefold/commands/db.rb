@@ -32,6 +32,13 @@ module Ninefold
       end
     end
 
+    desc "restore", "restore from a database backup"
+    def restore
+      pick_backup do |backup, app|
+        interaction :app_restore_database_backup, app, backup
+      end
+    end
+
     desc "download", "download a database backup"
     def download
       pick_backup do |backup, app|
