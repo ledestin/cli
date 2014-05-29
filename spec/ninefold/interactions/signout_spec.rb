@@ -1,23 +1,9 @@
 require "spec_helper"
 
 describe "Ninefold::Interaction::Signout" do
-  let(:output) do
-    Ninefold::Spec::Output.new
-  end
+  include_context "ui tests"
 
-  let(:input) do
-    Ninefold::Spec::Input.new
-  end
-
-  let(:user) do
-    Ninefold::Spec::User.new
-  end
-
-  let(:prefs) { {} }
-
-  let(:ui) do
-    Ninefold::Interaction::Signout.new(output, input, user, prefs)
-  end
+  let(:ui_class) { Ninefold::Interaction::Signout }
 
   it "deletes the user credentials if the user says 'y'" do
     input.on("Are you sure?") { "y" }

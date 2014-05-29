@@ -1,23 +1,9 @@
 require "spec_helper"
 
 describe "Ninefold::Interaction::Signin" do
-  let(:output) do
-    Ninefold::Spec::Output.new
-  end
+  include_context "ui tests"
 
-  let(:input) do
-    Ninefold::Spec::Input.new
-  end
-
-  let(:user) do
-    Ninefold::Spec::User.new
-  end
-
-  let(:prefs) { {} }
-
-  let(:ui) do
-    Ninefold::Interaction::Signin.new(output, input, user, prefs)
-  end
+  let(:ui_class) { Ninefold::Interaction::Signin }
 
   it "asks the user for an username and password" do
     input.on("Username:") { "wycats@example.com" }

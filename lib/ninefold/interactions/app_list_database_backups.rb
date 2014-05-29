@@ -10,9 +10,9 @@ module Ninefold
           alert "Apparently you don't have any backups for this app"
         else
           backups.each do |backup|
-            puts " - #{backup}"
+            say " - #{backup}"
           end
-          puts "\n"
+          say "\n"
         end
       end
     end
