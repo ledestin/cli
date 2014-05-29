@@ -6,14 +6,8 @@ module Ninefold
 
       Ninefold::DatabaseBackup.list(app) do |backups|
         hide_spinner
-        if backups.empty?
-          alert "Apparently you don't have any backups for this app"
-        else
-          backups.each do |backup|
-            say " - #{backup}"
-          end
-          say "\n"
-        end
+
+        list backups, empty_message: "Apparently you don't have any backups for this app"
       end
     end
   end

@@ -125,6 +125,20 @@ module Ninefold
       `stty #{old_state}`
     end
 
+    def list(items, options={})
+      say "\n"
+
+      items.each do |item|
+        say " • #{item}"
+      end
+
+      if items.size == 0
+        alert options[:empty_message] || "Apparently the list is empty"
+      end
+
+      say "\n"
+    end
+
     def done(text="Done")
       say "✔︎  #{text}", :green
     end
