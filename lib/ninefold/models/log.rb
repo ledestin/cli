@@ -8,7 +8,7 @@ module Ninefold
 
     def initialize(app, options={})
       @app     = app
-      @options = options
+      @options = options.dup
       @host    = Ninefold::Host.inst
     end
 

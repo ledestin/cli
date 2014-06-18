@@ -38,11 +38,12 @@ module Ninefold
     option :from,   type: 'string',                 desc: "from datetime (default from the beginning of the day)"
     option :to,     type: 'string',                 desc: "to datetime (defaults to today)"
     def logs
-      options[:from] = DateTime.parse(options[:from]) if options[:from]
-      options[:to]   = DateTime.parse(options[:to])   if options[:to]
+      options_unfrozen = options.dup
+      options_unfrozen[:from] = DateTime.parse(options[:from]) if options[:from]
+      options_unfrozen[:to]   = DateTime.parse(options[:to])   if options[:to]
 
       pick_app do |app|
-        interaction :logstail, Log.new(app, options)
+        interaction :logstail, Log.new(app, options_unfrozen)
       end
 
     rescue ArgumentError => e
