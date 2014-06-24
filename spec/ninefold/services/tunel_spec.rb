@@ -42,7 +42,21 @@ describe "Ninefold::Tunel" do
 
     it "sshes to the server" do
       tunel.systemed.should == [
-        "ssh -oStrictHostKeyChecking=no nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
+        "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ~/.ssh/id_rsa.pub nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
+      ]
+    end
+  end
+
+  context "#push" do
+    let(:local_file)  { "/tmp/local.txt" }
+    let(:remote_file) { "/tmp/remote.txt" }
+    let(:host_string) { "user@192.168.1.1 -p 22" }
+
+    before { tunel.push(local_file, remote_file, host_string) }
+
+    it "runs scp to push the file to the server" do
+      tunel.systemed.should == [
+        "scp -o stricthostkeychecking=no -o passwordauthentication=no -i ~/.ssh/id_rsa.pub -P 22 /tmp/local.txt user@192.168.1.1:/tmp/remote.txt"
       ]
     end
   end
