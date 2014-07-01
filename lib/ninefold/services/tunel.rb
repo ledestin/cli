@@ -3,10 +3,10 @@ require "shellwords"
 
 module Ninefold
   class Tunel
-    def initialize(app, public_key)
+    def initialize(app, public_key_location)
       @app        = app
-      @key_file   = public_key
-      @public_key = Ninefold::Key.read(public_key)
+      @public_key = Ninefold::Key.read(public_key_location)
+      @id_file    = @public_key.id_file
     end
 
     def run(command, *args, &onload)
@@ -14,7 +14,7 @@ module Ninefold
         onload.call(host, command) if onload
 
         print  "\e[90mStarting the process, press ctrl+d when you're done:\e[0m\n"
-        system "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i #{@key_file} #{host} -t '#{command}'"
+        system "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i #{@id_file} #{host} -t '#{command}'"
       end
     end
 
@@ -26,7 +26,7 @@ module Ninefold
       remote_filename = "#{host}:#{Shellwords.escape(remote_filename)}"
       local_filename  = Shellwords.escape(local_filename)
 
-      system "scp -o stricthostkeychecking=no -o passwordauthentication=no -i #{@key_file} -P #{port} #{local_filename} #{remote_filename}"
+      system "scp -o stricthostkeychecking=no -o passwordauthentication=no -i #{@id_file} -P #{port} #{local_filename} #{remote_filename}"
     end
 
     def print(str)
@@ -47,7 +47,7 @@ module Ninefold
     end
 
     def get_credentials_for(command, &block)
-      host.post "/apps/#{@app.id}/commands/#{command}", public_key: @public_key do |response|
+      host.post "/apps/#{@app.id}/commands/#{command}", public_key: @public_key.data do |response|
         block.call response[:ssh] || {}, response[:command]
       end
     end

@@ -24,7 +24,7 @@ module Ninefold
     rescue Ninefold::Host::Unreachable => e
       error "Could not reach the host"
     rescue Ninefold::Key::NotFound => e
-      error "Could not locate your public key (~/.ssh/id_rsa.pub)"
+      error e.message
     end
 
     def self.error(text)

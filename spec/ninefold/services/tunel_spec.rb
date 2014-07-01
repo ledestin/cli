@@ -19,9 +19,11 @@ describe "Ninefold::Tunel" do
   let(:tunel)   { Ninefold::Tunel.new(app, "~/.ssh/id_rsa.pub") }
   let(:command) { "console" }
   let(:public_key) { "publickey==nikolay@ninefold.com" }
+  let(:nf_key)  { double(Ninefold::Key, data: public_key, pub_file: "~/.ssh/id_rsa.pub", id_file: "~/.ssh/id_rsa") }
 
   before do
-    Ninefold::Key.stub(:read => public_key)
+    Ninefold::Key.stub(:read => nf_key)
+
     host.respond_to("/apps/#{app.id}/commands/#{command}", public_key: public_key)
       .with(:ok, {
         ssh: {
@@ -42,7 +44,7 @@ describe "Ninefold::Tunel" do
 
     it "sshes to the server" do
       tunel.systemed.should == [
-        "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ~/.ssh/id_rsa.pub nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
+        "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ~/.ssh/id_rsa nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
       ]
     end
   end
@@ -56,7 +58,7 @@ describe "Ninefold::Tunel" do
 
     it "runs scp to push the file to the server" do
       tunel.systemed.should == [
-        "scp -o stricthostkeychecking=no -o passwordauthentication=no -i ~/.ssh/id_rsa.pub -P 22 /tmp/local.txt user@192.168.1.1:/tmp/remote.txt"
+        "scp -o stricthostkeychecking=no -o passwordauthentication=no -i ~/.ssh/id_rsa -P 22 /tmp/local.txt user@192.168.1.1:/tmp/remote.txt"
       ]
     end
   end
