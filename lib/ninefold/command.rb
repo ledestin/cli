@@ -123,10 +123,10 @@ module Ninefold
         title "Signing you onto the box..."
         show_spinner
 
-        tunel = Ninefold::Tunel.new(app, options[:public_key])
-        tunel.run(name, *args) do |host, command|
+        tunnel = Ninefold::Tunnel.new(app, options[:public_key])
+        tunnel.run(name, *args) do |host, command|
           hide_spinner
-          block.call(tunel, host, command) if block
+          block.call(tunnel, host, command) if block
         end
       end
     end

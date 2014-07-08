@@ -1,6 +1,6 @@
 require "spec_helper"
 
-class Ninefold::Tunel
+class Ninefold::Tunnel
   attr_reader :printed, :systemed
 
   def print(stuff)
@@ -12,11 +12,11 @@ class Ninefold::Tunel
   end
 end
 
-describe "Ninefold::Tunel" do
+describe "Ninefold::Tunnel" do
   let(:host)    { Ninefold::Host.inst }
   let(:attrs)   { {"id" => 1, "name" => "App name"} }
   let(:app)     { Ninefold::App.new(attrs)}
-  let(:tunel)   { Ninefold::Tunel.new(app, "~/.ssh/id_rsa.pub") }
+  let(:tunnel)   { Ninefold::Tunnel.new(app, "~/.ssh/id_rsa.pub") }
   let(:command) { "console" }
   let(:public_key) { "publickey==nikolay@ninefold.com" }
   let(:nf_key)  { double(Ninefold::Key, data: public_key, pub_file: "~/.ssh/id_rsa.pub", id_file: "~/.ssh/id_rsa") }
@@ -36,14 +36,14 @@ describe "Ninefold::Tunel" do
   end
 
   context "#run" do
-    before { tunel.run(command, 'arg1', 'arg2') }
+    before { tunnel.run(command, 'arg1', 'arg2') }
 
     it "prints a nice intro" do
-      tunel.printed.should include "ctrl+d"
+      tunnel.printed.should include "ctrl+d"
     end
 
     it "sshes to the server" do
-      tunel.systemed.should == [
+      tunnel.systemed.should == [
         "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ~/.ssh/id_rsa nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
       ]
     end
@@ -54,10 +54,10 @@ describe "Ninefold::Tunel" do
     let(:remote_file) { "/tmp/remote.txt" }
     let(:host_string) { "user@192.168.1.1 -p 22" }
 
-    before { tunel.push(local_file, remote_file, host_string) }
+    before { tunnel.push(local_file, remote_file, host_string) }
 
     it "runs scp to push the file to the server" do
-      tunel.systemed.should == [
+      tunnel.systemed.should == [
         "scp -o stricthostkeychecking=no -o passwordauthentication=no -i ~/.ssh/id_rsa -P 22 /tmp/local.txt user@192.168.1.1:/tmp/remote.txt"
       ]
     end
