@@ -2,7 +2,7 @@
 require "shellwords"
 
 module Ninefold
-  class Tunel
+  class Tunnel
     def initialize(app, public_key_location)
       @app        = app
       @public_key = Ninefold::Key.read(public_key_location)
