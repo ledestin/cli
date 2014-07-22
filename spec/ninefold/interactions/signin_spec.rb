@@ -19,7 +19,7 @@ describe "Ninefold::Interaction::Signin" do
 
     ui.run
 
-    user.should be_signed_in
+    expect(user).to be_signed_in
   end
 
   it "tries multiple times if the wrong information is provided" do
@@ -32,7 +32,7 @@ describe "Ninefold::Interaction::Signin" do
 
     ui.run
 
-    user.should be_signed_in
+    expect(user).to be_signed_in
   end
 
   it "fails if the wrong information is supplied 10 times" do
@@ -42,6 +42,6 @@ describe "Ninefold::Interaction::Signin" do
 
     ui.run
 
-    user.should_not be_signed_in
+    expect(user).not_to be_signed_in
   end
 end

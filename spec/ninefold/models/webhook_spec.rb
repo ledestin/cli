@@ -19,7 +19,7 @@ describe "Ninefold::Webhook" do
         @error = error
       end
 
-      @error.should be_nil
+      expect(@error).to be_nil
     end
 
     it "gets the succesful response and yields it in the callback" do
@@ -30,7 +30,7 @@ describe "Ninefold::Webhook" do
         @error = error
       end
 
-      @error.should == 'validation failed'
+      expect(@error).to eq('validation failed')
     end
   end
 
@@ -48,7 +48,7 @@ describe "Ninefold::Webhook" do
         @success = success
       end
 
-      @success.should be_true
+      expect(@success).to be_truthy
     end
 
     it "yields false in the callback when fails" do
@@ -59,7 +59,7 @@ describe "Ninefold::Webhook" do
         @success = success
       end
 
-      @success.should be_false
+      expect(@success).to be_falsey
     end
   end
 
@@ -71,16 +71,16 @@ describe "Ninefold::Webhook" do
 
     it "assigns the new url" do
       host.respond_to("/apps/#{app.id}/webhooks/#{service}").with(:ok, webhook_details)
-      org_webhook.url.should be_nil
+      expect(org_webhook.url).to be_nil
       org_webhook.show
-      org_webhook.url.should == url
+      expect(org_webhook.url).to eq(url)
     end
 
     it "errors when not found" do
       host.respond_to("/apps/#{app.id}/webhooks/#{service}").with(:fail)
-      org_webhook.url.should be_nil
+      expect(org_webhook.url).to be_nil
       org_webhook.show
-      org_webhook.url.should be_nil
+      expect(org_webhook.url).to be_nil
     end
   end
 end

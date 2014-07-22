@@ -7,28 +7,28 @@ describe 'Ninefold::User' do
   let(:user)  { Ninefold::User.new('nikolay', token) }
 
   before do
-    user.stub :host => host
+    allow(user).to receive(:host).and_return(host)
   end
 
   context "#initialize" do
     it "assigns the name" do
-      user.name.should == 'nikolay'
+      expect(user.name).to eq('nikolay')
     end
 
     it "assigns the user token" do
-      user.token.should == token
+      expect(user.token).to eq(token)
     end
   end
 
   context "#signed_in?" do
     it "returns true if the user has a security token" do
       user.token = token
-      user.should be_signed_in
+      expect(user).to be_signed_in
     end
 
     it "returns false if there is no sicurity token" do
       user.token = nil
-      user.should_not be_signed_in
+      expect(user).not_to be_signed_in
     end
   end
 
@@ -50,16 +50,16 @@ describe 'Ninefold::User' do
 
       it "sets the user's name" do
         user.signin('nikolay', 'password')
-        user.name.should == "nikolay"
+        expect(user.name).to eq("nikolay")
       end
 
       it "signs in the user if it receives a token" do
         user.signin('nikolay', 'password')
-        user.should be_signed_in
+        expect(user).to be_signed_in
       end
 
       it "saves the credentials" do
-        user.should_receive(:save)
+        expect(user).to receive(:save)
         user.signin('nikolay', 'password')
       end
     end
@@ -76,16 +76,16 @@ describe 'Ninefold::User' do
 
       it "doesn't set the user's name" do
         user.signin("nikolay", "wrong-password")
-        user.name.should == nil
+        expect(user.name).to eq(nil)
       end
 
       it "doesn't sign the user in" do
         user.signin("nikolay", "wrong-password")
-        user.should_not be_signed_in
+        expect(user).not_to be_signed_in
       end
 
       it "doesn't attempt to save the user's credentials" do
-        user.should_not_receive(:save)
+        expect(user).not_to receive(:save)
         user.signin("nikolay", "wrong-password")
       end
     end
@@ -96,46 +96,46 @@ describe 'Ninefold::User' do
 
     context ".find" do
       context "with existing token" do
-        before { token_store.stub(:find => ['nikolay', token]) }
+        before { allow(token_store).to receive(:find).and_return(['nikolay', token]) }
         before { @user = Ninefold::User.find }
 
-        it { @user.should be_a(Ninefold::User) }
-        it { @user.name.should == 'nikolay' }
-        it { @user.token.should == token }
+        it { expect(@user).to be_a(Ninefold::User) }
+        it { expect(@user.name).to eq('nikolay') }
+        it { expect(@user.token).to eq(token) }
       end
 
       context "with missing token" do
-        before { token_store.stub(:find => nil) }
+        before { allow(token_store).to receive(:find).and_return(nil) }
         before { @user = Ninefold::User.find }
 
-        it { @user.should be_a(Ninefold::User) }
-        it { @user.name.should be_nil }
-        it { @user.token.should be_nil }
+        it { expect(@user).to be_a(Ninefold::User) }
+        it { expect(@user.name).to be_nil }
+        it { expect(@user.token).to be_nil }
       end
 
       context "with ENV['AUTH_TOKEN']" do
-        before { token_store.stub(:find => nil) }
+        before { allow(token_store).to receive(:find).and_return(nil) }
         before { ENV['AUTH_TOKEN'] = token }
         before { @user = Ninefold::User.find }
         after { ENV['AUTH_TOKEN'] = nil }
 
-        it { @user.should be_a(Ninefold::User) }
-        it { @user.name.should == nil }
-        it { @user.token.should == token }
+        it { expect(@user).to be_a(Ninefold::User) }
+        it { expect(@user.name).to eq(nil) }
+        it { expect(@user.token).to eq(token) }
       end
     end
 
 
     context "#save" do
       it "saves the netrc data when there is a username and a token" do
-        token_store.should_receive(:save).with('nikolay', token)
+        expect(token_store).to receive(:save).with('nikolay', token)
         user.save
       end
     end
 
     context "#delete" do
       it "removes the data from the netrc entry" do
-        token_store.should_receive(:clear)
+        expect(token_store).to receive(:clear)
         user.delete
       end
     end

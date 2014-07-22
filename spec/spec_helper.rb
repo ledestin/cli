@@ -3,6 +3,14 @@ require "securerandom"
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |file| require file }
 
+RSpec.configure do |config|
+  config.raise_errors_for_deprecations!
+
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+end
+
 class Ninefold::Brutus
   def show
     # print nothing in tests

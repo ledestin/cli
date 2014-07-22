@@ -8,7 +8,7 @@ describe "Ninefold::Interaction::Signout" do
   it "deletes the user credentials if the user says 'y'" do
     input.on("Are you sure?") { "y" }
 
-    user.should_receive(:delete)
+    expect(user).to receive(:delete)
 
     ui.run
   end
@@ -16,7 +16,7 @@ describe "Ninefold::Interaction::Signout" do
   it "doesn't touch the user if he said nope" do
     input.on("Are you sure?") { "nope" }
 
-    user.should_not_receive(:delete)
+    expect(user).not_to receive(:delete)
 
     ui.run
   end

@@ -8,11 +8,11 @@ describe "Ninefold::App" do
 
   context "attributes" do
     it "bypasses the .id" do
-      app.id.should == 1
+      expect(app.id).to eq(1)
     end
 
     it "bypasses the .name" do
-      app.name.should == "App name"
+      expect(app.name).to eq("App name")
     end
   end
 
@@ -26,14 +26,14 @@ describe "Ninefold::App" do
     end
 
     it "loads the apps" do
-      @apps.size.should == 2
-      @apps.map(&:name).should == ["App 1", "App 2"]
+      expect(@apps.size).to eq(2)
+      expect(@apps.map(&:name)).to eq(["App 1", "App 2"])
     end
   end
 
   context '#attributes' do
     it "returns the apps attributes" do
-      app.attributes.should == attrs
+      expect(app.attributes).to eq(attrs)
     end
   end
 
@@ -46,13 +46,13 @@ describe "Ninefold::App" do
 
     it "it assigns the new data" do
       app.fetch
-      app.attributes.should == app_details
+      expect(app.attributes).to eq(app_details)
     end
 
     it "calls back once loaded" do
       @called = false
       app.fetch{ @called = true }
-      @called.should == true
+      expect(@called).to eq(true)
     end
   end
 
@@ -69,7 +69,7 @@ describe "Ninefold::App" do
       context 'normal case' do
         it "schedules the redeploy" do
           app.redeploy do |success|
-            success.should == true
+            expect(success).to eq(true)
           end
         end
       end
@@ -79,7 +79,7 @@ describe "Ninefold::App" do
 
         it "shedules the redeploy" do
           app.redeploy true do |success|
-            success.should == true
+            expect(success).to eq(true)
           end
         end
       end
@@ -90,7 +90,7 @@ describe "Ninefold::App" do
 
       it "gets handled correctly" do
         app.redeploy do |success|
-          success.should == false
+          expect(success).to eq(false)
         end
       end
     end
@@ -110,7 +110,7 @@ describe "Ninefold::App" do
         @status = status
       end
 
-      @status.should == deploy_status
+      expect(@status).to eq(deploy_status)
     end
   end
 

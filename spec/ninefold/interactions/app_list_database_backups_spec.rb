@@ -9,8 +9,8 @@ describe Ninefold::Interaction::AppListDatabaseBackups do
   let(:backups) { [backup] }
 
   before do
-    Ninefold::DatabaseBackup.stub(:new).and_return(backup)
-    Ninefold::DatabaseBackup.should_receive(:list).and_yield(backups)
+    allow(Ninefold::DatabaseBackup).to receive(:new).and_return(backup)
+    expect(Ninefold::DatabaseBackup).to receive(:list).and_yield(backups)
   end
 
   it "renders the backups list" do

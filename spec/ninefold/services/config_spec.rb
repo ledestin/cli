@@ -17,21 +17,21 @@ describe "Ninefold::Config" do
 
   describe ".read" do
     it "returns a config instance if the file exists" do
-      Ninefold::Config.read(config.filename).should be_a(Ninefold::Config)
+      expect(Ninefold::Config.read(config.filename)).to be_a(Ninefold::Config)
     end
 
     it "returns nil if the file doesn't exists" do
-      Ninefold::Config.read("/non/existing/file").should == nil
+      expect(Ninefold::Config.read("/non/existing/file")).to eq(nil)
     end
   end
 
   describe "new instance" do
     it "saves the filename" do
-      config.filename.should == config_file
+      expect(config.filename).to eq(config_file)
     end
 
     it "parses the data correctly" do
-      config.params.should == {
+      expect(config.params).to eq({
         'one' => {
           'num'    => 0,
           'bool'   => true,
@@ -40,41 +40,41 @@ describe "Ninefold::Config" do
         'two "and a half"' => {
           'key'    => 'value'
         }
-      }
+      })
     end
   end
 
   describe "#[]" do
     it "returns the key values" do
-      config['one'].should == {
+      expect(config['one']).to eq({
         'num'    => 0,
         'bool'   => true,
         'string' => 'something'
-      }
+      })
     end
 
     it "allows to assign new keys" do
       config['new'] = 'value'
-      config['new'].should == 'value'
+      expect(config['new']).to eq('value')
     end
   end
 
   describe "#write" do
     it "writes the flat config data into the file" do
       config.write({a: 1, b: 2, c: 3})
-      File.read(config_file).should == "a = 1\nb = 2\nc = 3"
+      expect(File.read(config_file)).to eq("a = 1\nb = 2\nc = 3")
     end
 
     it "writes nested configs into the file" do
       config.write({a: {b: 2, c: 3}})
-      File.read(config_file).should == "[a]\n  b = 2\n  c = 3"
+      expect(File.read(config_file)).to eq("[a]\n  b = 2\n  c = 3")
     end
   end
 
   describe "#delete" do
     it "deletes the config file" do
       config.delete
-      File.exists?(config_file).should == false
+      expect(File.exists?(config_file)).to eq(false)
     end
   end
 

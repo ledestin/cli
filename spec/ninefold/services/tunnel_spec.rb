@@ -22,7 +22,7 @@ describe "Ninefold::Tunnel" do
   let(:nf_key)  { double(Ninefold::Key, data: public_key, pub_file: "~/.ssh/id_rsa.pub", id_file: "~/.ssh/id_rsa") }
 
   before do
-    Ninefold::Key.stub(:read => nf_key)
+    allow(Ninefold::Key).to receive(:read).and_return(nf_key)
 
     host.respond_to("/apps/#{app.id}/commands/#{command}", public_key: public_key)
       .with(:ok, {
@@ -39,13 +39,13 @@ describe "Ninefold::Tunnel" do
     before { tunnel.run(command, 'arg1', 'arg2') }
 
     it "prints a nice intro" do
-      tunnel.printed.should include "ctrl+d"
+      expect(tunnel.printed).to include "ctrl+d"
     end
 
     it "sshes to the server" do
-      tunnel.systemed.should == [
+      expect(tunnel.systemed).to eq([
         "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ~/.ssh/id_rsa nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
-      ]
+      ])
     end
   end
 
@@ -57,9 +57,9 @@ describe "Ninefold::Tunnel" do
     before { tunnel.push(local_file, remote_file, host_string) }
 
     it "runs scp to push the file to the server" do
-      tunnel.systemed.should == [
+      expect(tunnel.systemed).to eq([
         "scp -o stricthostkeychecking=no -o passwordauthentication=no -i ~/.ssh/id_rsa -P 22 /tmp/local.txt user@192.168.1.1:/tmp/remote.txt"
-      ]
+      ])
     end
   end
 end

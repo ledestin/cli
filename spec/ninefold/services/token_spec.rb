@@ -6,7 +6,8 @@ describe "Ninefold::Token" do
   let(:token) { SecureRandom.hex }
 
   before do
-    Ninefold::Token.stub(:host => host, :netrc => netrc)
+    allow(Ninefold::Token).to receive(:host).and_return(host)
+    allow(Ninefold::Token).to receive(:netrc).and_return(netrc)
   end
 
   context ".find" do
@@ -14,13 +15,13 @@ describe "Ninefold::Token" do
       netrc[host] = "nikolay", token
       netrc.save
 
-      Ninefold::Token.find.should == ["nikolay", token]
+      expect(Ninefold::Token.find).to eq(["nikolay", token])
     end
 
     it "returns an empty array if there is no saved token" do
       netrc.delete host
 
-      Ninefold::Token.find.should == nil
+      expect(Ninefold::Token.find).to eq(nil)
     end
   end
 
@@ -30,13 +31,13 @@ describe "Ninefold::Token" do
     it "saves the username/token when provided" do
       Ninefold::Token.save "nikolay", token
 
-      netrc[host].should == ["nikolay", token]
+      expect(netrc[host]).to eq(["nikolay", token])
     end
 
     it "doesn't crash when given nils" do
       Ninefold::Token.save(nil, nil)
 
-      netrc[host].should == nil
+      expect(netrc[host]).to eq(nil)
     end
   end
 
@@ -47,7 +48,7 @@ describe "Ninefold::Token" do
 
       Ninefold::Token.clear
 
-      netrc[host].should == nil
+      expect(netrc[host]).to eq(nil)
     end
   end
 end

@@ -5,7 +5,7 @@ describe "Ninefold::Host" do
 
   context '#initialize' do
     it "sets the host name" do
-      host.name.should == "smth.com"
+      expect(host.name).to eq("smth.com")
     end
   end
 
@@ -17,7 +17,7 @@ describe "Ninefold::Host" do
     end
 
     it "returns an Ninefold::Host::Response object" do
-      response.should be_a(Ninefold::Host::Response)
+      expect(response).to be_a(Ninefold::Host::Response)
     end
   end
 
@@ -27,30 +27,30 @@ describe "Ninefold::Host" do
 
     context "#ok?" do
       it "returns true if the request is successful" do
-        http_response.stub(:success? => true)
-        response.ok?.should == true
+        allow(http_response).to receive(:success?).and_return(true)
+        expect(response.ok?).to eq(true)
       end
 
       it "returns false if the request is not successful" do
-        http_response.stub(:success? => false)
-        response.ok?.should == false
+        allow(http_response).to receive(:success?).and_return(false)
+        expect(response.ok?).to eq(false)
       end
     end
 
     context "#[]" do
       it "gives access the response body data" do
-        http_response.stub(:body => '{"some" : "data"}')
-        response["some"].should == "data"
+        allow(http_response).to receive(:body).and_return('{"some" : "data"}')
+        expect(response["some"]).to eq("data")
       end
 
       it "provides indifirrent access" do
-        http_response.stub(:body => '{"some" : "data"}')
-        response[:some].should == "data"
+        allow(http_response).to receive(:body).and_return('{"some" : "data"}')
+        expect(response[:some]).to eq("data")
       end
 
       it "doesn't crash if the data is not valid JSON" do
-        http_response.stub(:body => 'something went wrong')
-        response["some"].should == nil
+        allow(http_response).to receive(:body).and_return('something went wrong')
+        expect(response["some"]).to eq(nil)
       end
     end
   end

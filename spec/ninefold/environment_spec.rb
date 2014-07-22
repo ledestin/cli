@@ -5,10 +5,10 @@ describe "Ninefold::Environment" do
   let(:wrapper) { Ninefold::Environment.new("NINEFOLD", env) }
 
   it "looks up the name using the prefix" do
-    wrapper["TOKEN"].should == "some-token"
+    expect(wrapper["TOKEN"]).to eq("some-token")
   end
 
   it "upcases the name" do
-    wrapper["token"].should == "some-token"
+    expect(wrapper["token"]).to eq("some-token")
   end
 end
