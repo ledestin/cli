@@ -20,11 +20,14 @@ module Ninefold
     rescue Ninefold::Host::AccessDenied => e
       error "Access denied"
     rescue Ninefold::Host::Unprocessable => e
-      error e.message || "Something went wrong on the other side"
+      error e.message == e.class.name ? "Something went wrong on the other side" : e.message
     rescue Ninefold::Host::Unreachable => e
       error "Could not reach the host"
     rescue Ninefold::Key::NotFound => e
       error e.message
+    rescue => e
+      raise e if ENV['NINEFOLD_HOST'] != nil # development mode
+      error "something went wrong, please contact support"
     end
 
     def self.error(text)

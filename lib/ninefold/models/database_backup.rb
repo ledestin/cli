@@ -31,28 +31,34 @@ module Ninefold
       end
     end
 
+    def self.get_url(app, backup, &block)
+      Ninefold::Host.inst.get "/apps/#{app.id}/database/backups/#{backup.id}" do |response|
+        block.call response["backup"]["download_url"]
+      end
+    end
+
     def id
       attributes['id']
-    end
-
-    def file_name
-      "#{created_at.gsub(':','-').gsub('+00:00','')}.tar.gz"
-    end
-
-    def created_at
-      DateTime.iso8601(attributes["created_at"]).to_s
     end
 
     def size
       attributes["size"]
     end
 
-    def url
-      attributes["url"]
+    def type
+      attributes["type"]
+    end
+
+    def created_at
+      DateTime.iso8601(attributes["created_at"]).strftime "%Y-%m-%d %H:%M"
+    end
+
+    def file_name
+      "#{attributes['created_at'].gsub(/[^\d\.]+/,'-').split('.')[0]}.tar.gz"
     end
 
     def to_s
-      "#{created_at} (#{size})"
+      "#{created_at} - (#{type}, #{size})"
     end
   end
 end

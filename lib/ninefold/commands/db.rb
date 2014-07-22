@@ -1,3 +1,5 @@
+require "shellwords"
+
 module Ninefold
   class Command::Db < Ninefold::Command
 
@@ -30,8 +32,12 @@ module Ninefold
     desc "download", "download a database backup"
     def download
       pick_backup do |backup, app|
-        title "Downloading backup #{backup.created_at}"
-        system("curl '#{backup.url}' > #{backup.file_name}")
+        title "Requesting the backup download url..."
+        Ninefold::DatabaseBackup.get_url(app, backup) do |download_url|
+          title "Downloading backup -> #{backup.file_name}"
+          system "curl -s '#{Shellwords.escape(download_url)}' > #{Shellwords.escape(backup.file_name)}"
+          say "DONE", :green
+        end
       end
     end
 
