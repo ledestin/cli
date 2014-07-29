@@ -34,9 +34,13 @@ module Ninefold
       pick_backup do |backup, app|
         title "Requesting the backup download url..."
         Ninefold::DatabaseBackup.get_url(app, backup) do |download_url|
-          title "Downloading backup -> #{backup.file_name}"
-          system "curl -s '#{Shellwords.escape(download_url)}' > #{Shellwords.escape(backup.file_name)}"
-          say "DONE", :green
+          if `which wget`.size < 1
+            say "We couldn't find 'wget' in your system to download the backup\nPlease download the following url with any web-browser instead\n#{download_url}"
+          else
+            title "Downloading backup -> #{backup.file_name}"
+            system "wget -nv -O '#{backup.file_name}' '#{download_url}'"
+            say "DONE", :green
+          end
         end
       end
     end
