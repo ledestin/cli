@@ -33,12 +33,12 @@ module Ninefold
     def download
       pick_backup do |backup, app|
         title "Requesting the backup download url..."
-        Ninefold::DatabaseBackup.get_url(app, backup) do |download_url|
+        Ninefold::DatabaseBackup.get_urls(app, backup) do |download_urls|
           if `which wget`.size < 1
-            say "We couldn't find 'wget' in your system to download the backup\nPlease download the following url with any web-browser instead\n#{download_url}"
+            say "We couldn't find 'wget' in your system to download the backup\nPlease download the following urls with any web-browser instead\n\n#{download_urls.join("\n")}"
           else
-            title "Downloading backup -> #{backup.file_name}"
-            system "wget -nv -O '#{backup.file_name}' '#{download_url}'"
+            title "Downloading backups -> #{backup.file_name}"
+            download_urls.each_with_index { |url, i| system "wget -O '#{backup.file_name(i) }' '#{url}'" }
             say "DONE", :green
           end
         end

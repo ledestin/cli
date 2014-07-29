@@ -60,11 +60,11 @@ describe Ninefold::DatabaseBackup do
     it { expect(@success) }
   end
 
-  describe ".get_url" do
+  describe ".get_urls" do
     before do
-      host.respond_to('/apps/99/database/backups/123').with(:ok, {backup: {download_url: "dummy url"}})
+      host.respond_to('/apps/99/database/backups/123').with(:ok, {backup: {download_urls: ["dummy url"]}})
 
-      Ninefold::DatabaseBackup.get_url(app, database_backup) do |success|
+      Ninefold::DatabaseBackup.get_urls(app, database_backup) do |success|
         @success = success
       end
     end

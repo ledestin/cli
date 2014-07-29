@@ -31,9 +31,9 @@ module Ninefold
       end
     end
 
-    def self.get_url(app, backup, &block)
+    def self.get_urls(app, backup, &block)
       Ninefold::Host.inst.get "/apps/#{app.id}/database/backups/#{backup.id}" do |response|
-        block.call response["backup"]["download_url"]
+        block.call response["backup"]["download_urls"]
       end
     end
 
@@ -53,8 +53,8 @@ module Ninefold
       DateTime.iso8601(attributes["created_at"]).strftime "%Y-%m-%d %H:%M"
     end
 
-    def file_name
-      "#{attributes['created_at'].gsub(/[^\d\.]+/,'-').split('.')[0]}.tar.gz"
+    def file_name(index=0)
+      "#{attributes['created_at'].gsub(/[^\d\.]+/,'-').split('.')[0]}#{index == 0 ? "" : "-#{index}"}.tar.gz"
     end
 
     def to_s
