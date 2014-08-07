@@ -7,7 +7,7 @@ describe "Ninefold::Interaction::AppRestoreDatabaseBackup" do
 
   let(:app) { double(Ninefold::App, :id => 99) }
   let(:backup) { double(Ninefold::DatabaseBackup, :to_s => "blah") }
-  let(:confirmation_message) { "Are you sure you want to restore from this backup?\nThis will eraze all data in your database!" }
+  let(:confirmation_message) { "Are you sure you want to restore from this backup?\nThis will erase all data in your database!" }
 
   subject(:interact) { ui.run(app, backup) }
 

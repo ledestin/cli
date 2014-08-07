@@ -1,7 +1,7 @@
 module Ninefold
   class Interaction::AppRestoreDatabaseBackup < Ninefold::Interaction
     def run(app, backup)
-      return if ! confirm("Are you sure you want to restore from this backup?\nThis will eraze all data in your database!")
+      return if ! confirm("Are you sure you want to restore from this backup?\nThis will erase all data in your database!")
 
       title "Scheduling the database restore ..."
       show_spinner
