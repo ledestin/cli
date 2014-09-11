@@ -5,7 +5,7 @@ module Ninefold
     def self.load(&block)
       [].tap do |apps|
         Ninefold::Host.inst.get "/apps" do |response|
-          response[:apps].each do |app|
+          response.to_a.each do |app|
             apps << new(app)
           end
 
@@ -22,7 +22,7 @@ module Ninefold
 
     def fetch(&block)
       host.get "/apps/#{id}" do |response|
-        response[:app].each do |key, value|
+        response.to_h.each do |key, value|
           @attributes[key.to_s] = value
         end
 
@@ -35,13 +35,13 @@ module Ninefold
     end
 
     def redeploy(force=false, &block)
-      host.get "/apps/#{id}/redeploy", force ? {force_redeploy: true} : {} do |response|
+      host.post "/apps/#{id}/deployments", force ? {force_redeploy: true} : {} do |response|
         block.call response.ok?
       end
     end
 
     def deploy_status(&block)
-      host.get "/apps/#{id}/deploy_status" do |response|
+      host.get "/apps/#{id}/deployments/last" do |response|
         @deployment_id = response['deployment_id']
         block.call response['status']
       end

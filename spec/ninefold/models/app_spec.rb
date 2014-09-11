@@ -18,7 +18,7 @@ describe "Ninefold::App" do
 
   context ".load" do
     before do
-      host.respond_to("/apps").with(:ok, {apps: [{id: 1, name: "App 1"}, {id: 2, name: "App 2"}]})
+      host.respond_to("/apps").with(:ok, [{id: 1, name: "App 1"}, {id: 2, name: "App 2"}])
 
       Ninefold::App.load do |apps|
         @apps = apps
@@ -41,7 +41,7 @@ describe "Ninefold::App" do
     let(:app_details) { {"id" => 123, "name" => "App name", "repo" => "git://github.com/nikolay/theosom.git"} }
 
     before do
-      host.respond_to("/apps/#{app.id}").with(:ok, {app: app_details})
+      host.respond_to("/apps/#{app.id}").with(:ok, app_details)
     end
 
     it "it assigns the new data" do
@@ -60,7 +60,7 @@ describe "Ninefold::App" do
     let(:params) { {} }
 
     before do
-      host.respond_to("/apps/#{app.id}/redeploy", params).with(response_status)
+      host.respond_to("/apps/#{app.id}/deployments", params).with(response_status)
     end
 
     context 'successfull' do
@@ -100,7 +100,7 @@ describe "Ninefold::App" do
     let(:deploy_status) { "running" }
 
     before do
-      host.respond_to("/apps/#{app.id}/deploy_status").with(:ok, status: deploy_status)
+      host.respond_to("/apps/#{app.id}/deployments/last").with(:ok, status: deploy_status)
     end
 
     it "gets the deploy status and yields it in the callback" do

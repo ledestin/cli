@@ -88,7 +88,15 @@ module Ninefold
         @data[key.to_s]
       end
 
+      def each(&block)
+        @data.each(&block)
+      end
+
       def to_h
+        @data
+      end
+
+      def to_a
         @data
       end
     end
