@@ -29,7 +29,7 @@ module Ninefold
           break
         when 'running'
           tail_logs(app)
-          sleep 1
+          sleep 3
           next_tick(app)
         else
           say "Whoops, apparently something went wrong", :red

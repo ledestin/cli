@@ -66,11 +66,13 @@ module Ninefold
     end
 
     def handle_http_errors(result)
+      message = JSON.parse(result.body)['messages'].first rescue nil
+
       case result.status
-      when 404 then raise NotFound
-      when 403 then raise AccessDenied
-      when 422 then raise Unprocessable.new JSON.parse(result.body)['messages'].first
-      when 405..500 then raise Unprocessable
+      when 404 then raise NotFound, message
+      when 403 then raise AccessDenied, message
+      when 422 then raise Unprocessable, message
+      when 405..500 then raise Unprocessable, message
       end
     end
 
@@ -85,7 +87,7 @@ module Ninefold
       end
 
       def [](key)
-        @data[key.to_s]
+        @data.is_a?(Hash) ? @data[key.to_s] : key.is_a?(Integer) ? @data[key] : nil
       end
 
       def each(&block)
