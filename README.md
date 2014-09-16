@@ -26,6 +26,7 @@ Then run the following to get the list of the `app` related commands
 Ninefold frequently updates the CLI with new features. Before running the CLI, we recommend that you update your version of the gem.
 
 #### Note
+
 The current version (1.7.4) is no longer backwards compatible. Please ensure you have updated your gem to the newest version.
 
 	gem update ninefold
