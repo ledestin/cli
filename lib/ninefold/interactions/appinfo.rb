@@ -8,7 +8,12 @@ module Ninefold
         hide_spinner
 
         app.attributes.each do |key, value|
-          display_key = (key == 'deployed_sha' ? 'Deployed SHA' : key.capitalize)
+          display_key, value = case key
+                               when 'last_deployment'
+                                 ['Deployed SHA', value['sha']]
+                               else
+                                 [key.capitalize.gsub('_', ' '), value]
+                               end
           puts "#{display_key.ljust(15)} #{value}"
         end
       end
