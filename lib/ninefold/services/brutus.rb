@@ -56,12 +56,12 @@ module Ninefold
       loop chewing_sprites
     end
 
-    def say(text)
+    def say(text, options={})
       text = build_blob(text)
       maxl = text.split("\n").map(&:size).max
       brut = build_sprite(CHEWING[0], maxl)
 
-      print "\e[35m#{ text }\e[0m\n#{brut}\n"
+      print "\e[#{options[:color] || 35}m#{ text }\e[0m\n#{brut}"
     end
 
   protected
@@ -137,7 +137,7 @@ module Ninefold
       max_l = frame_width || lines.map { |line| real_size(line) }.max
       lines = lines.map { |line| line + " " * (max_l - real_size(line)) }
 
-      lines.join("\n") + "\n" + grass.slice(0, max_l + 7) + "\e[0m\n"
+      lines.join("\n") + "\n" + grass.slice(0, max_l + 6) + "\e[0m\n"
     end
 
     def real_size(string)

@@ -18,13 +18,21 @@ module Ninefold
     rescue Ninefold::Key::Error, Ninefold::Host::Error => e
       error e.message
     rescue => e
-      raise e if ENV['NINEFOLD_HOST'] != nil # development mode
-      error "something went wrong, please contact support"
+      save_error_trace(e)
+      error "Woops, something went wrong :(\nDid you try to update the ninefold gem?"
     end
 
     def self.error(text)
-      Ninefold::Stdio.print("\e[31mERROR: #{text}\e[0m\n")
+      Ninefold::Brutus.new.say("ERROR: #{text}", color: 31)
       exit 0
+    end
+
+    def self.save_error_trace(e)
+      raise e if ENV['NINEFOLD_HOST'] != nil # development mode
+
+      "/tmp/ninefold-cli-trace.txt".tap do |filename|
+        File.write(filename, "#{e.message}\n\n------\n\n#{(e.backtrace || []).join("\n")}") rescue nil
+      end
     end
 
     def self.command_alias(map)
