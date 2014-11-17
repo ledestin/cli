@@ -31,7 +31,7 @@ describe "Ninefold::Token" do
     it "saves the username/token when provided" do
       Ninefold::Token.save "nikolay", token
 
-      expect(netrc[host]).to eq(["nikolay", token])
+      expect(netrc[host]).to eq(Netrc::Entry.new("nikolay", token))
     end
 
     it "doesn't crash when given nils" do

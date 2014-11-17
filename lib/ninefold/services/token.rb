@@ -4,7 +4,9 @@ module Ninefold
   class Token
     class << self
       def find(host_name=nil)
-        netrc[host_name || host]
+        if params = netrc[host_name || host]
+          [params.login, params.password]
+        end
       end
 
       def save(username, password)
