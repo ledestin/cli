@@ -15,15 +15,7 @@ module Ninefold
       super
     rescue Interrupt => e
       puts "\n" # do nothing if the user interrupted the programm
-    rescue Ninefold::Host::NotFound => e
-      error "Server returned 404. Record is not found"
-    rescue Ninefold::Host::AccessDenied => e
-      error "Access denied"
-    rescue Ninefold::Host::Unprocessable => e
-      error e.message == e.class.name ? "Something went wrong on the other side" : e.message
-    rescue Ninefold::Host::Unreachable => e
-      error "Could not reach the host"
-    rescue Ninefold::Key::NotFound => e
+    rescue Ninefold::Key::Error, Ninefold::Host::Error => e
       error e.message
     rescue => e
       raise e if ENV['NINEFOLD_HOST'] != nil # development mode

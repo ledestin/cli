@@ -2,7 +2,8 @@ module Ninefold
   class Key
     include Ninefold::Host::Access
 
-    class NotFound < StandardError; end
+    class Error    < StandardError; end
+    class NotFound < Error; end
 
     def self.read(location=nil)
       new File.expand_path(location || "~/.ssh/id_rsa.pub")

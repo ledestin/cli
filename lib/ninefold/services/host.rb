@@ -13,10 +13,35 @@ module Ninefold
       end
     end
 
-    class NotFound             < StandardError; end
-    class AccessDenied         < StandardError; end
-    class Unprocessable        < StandardError; end
-    class Unreachable          < StandardError; end
+    class Error < StandardError
+      def self.msg=(msg)
+        @msg = msg
+      end
+
+      def self.msg
+        @msg
+      end
+
+      def initialize(msg=nil)
+        super msg || self.class.msg
+      end
+    end
+
+    class NotFound < Error
+      self.msg = "Server returned 404. Record is not found"
+    end
+
+    class AccessDenied < Error
+      self.msg = "Access denied"
+    end
+
+    class Unprocessable < Error
+      self.msg = "Something went wrong on the other side"
+    end
+
+    class Unreachable < Error
+      self.msg = "Could not reach the host"
+    end
 
     DEFAULT_NAME = "portal.ninefold.com"
     API_VERSION  = "v1"
