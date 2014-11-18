@@ -3,12 +3,10 @@ module Ninefold
 
     def run(app)
       title "Checking the deployment status..."
-      show_spinner
       next_tick(app)
     end
 
     def tail_logs(app)
-      hide_spinner
       if app.deploy_log
         app.deploy_log.fetch do |entries|
           entries.each { |e| logstail.print_entry(e) }
@@ -24,20 +22,15 @@ module Ninefold
       app.deploy_status do |status|
         case status
         when 'complete'
-          hide_spinner
           done "Deployment is complete"
-          break
         when 'running'
           tail_logs(app)
           sleep 3
           next_tick(app)
         else
-          say "Whoops, apparently something went wrong", :red
+          fail "Whoops, apparently the redeployment has failed"
         end
       end
-
-    rescue Interrupt => e
-      # that's okay
     end
   end
 end
