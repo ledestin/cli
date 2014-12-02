@@ -1,24 +1,22 @@
 module Ninefold
   class Key
-    include Ninefold::Host::Access
-
     class Error    < StandardError; end
     class NotFound < Error; end
 
-    def self.read(location=nil)
-      new File.expand_path(location || "~/.ssh/id_rsa.pub")
+    def self.read(location)
+      new File.expand_path(location)
+    end
+
+    def self.create(app_id, location)
+      Ninefold::KeyGenerator.create location
     end
 
     attr_reader :data, :id_file, :pub_file
 
-    def initialize(location, app_id=nil)
+    def initialize(location)
       @id_file, @pub_file = locate_keys_at(location)
 
       @data = File.read(location).gsub(/\s*\n\s*/, '').strip
-    end
-
-    def save
-      host.post "/apps/#{@app_id}/keys", public_key: @public_key
     end
 
   private
