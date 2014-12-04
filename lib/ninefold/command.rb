@@ -5,7 +5,7 @@ require "thor"
 module Ninefold
   class Command < Thor
     class_option :sure, type: 'boolean', aliases: '-s', desc: "don't ask for confirmation"
-    class_option :public_key, aliases: '-k', desc: "your public key location", default: "~/.ssh/id_rsa.pub"
+    class_option :public_key, aliases: '-k', desc: "your public key location", default: "#{Dir.home}/.ssh/ninefold_id_rsa.pub"
     class_option :robot, type: 'boolean', aliases: '-q', desc: 'plain black and white mode without animations'
     class_option :magic, type: 'boolean', aliases: '-m', desc: 'add magic and rainbows'
 
@@ -123,10 +123,16 @@ module Ninefold
 
     def run_app_command(name, *args, &block)
       pick_app do |app|
+        tunnel = begin
+                  Ninefold::Tunnel.new(app, options[:public_key])
+                rescue Key::NotFound
+                  title "Generating a ninefold ssh key set..."
+                  Ninefold::Tunnel.new_with_key(app, options[:public_key])
+                end
+
         title "Signing you onto the box..."
         show_spinner
 
-        tunnel = Ninefold::Tunnel.new(app, options[:public_key])
         tunnel.run(name, *args) do |host, command|
           hide_spinner
           block.call(tunnel, host, command) if block

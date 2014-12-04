@@ -35,6 +35,16 @@ describe "Ninefold::Tunnel" do
       })
   end
 
+  context ".new_with_key" do
+    it "creates a key and initializes itself" do
+      expect(Ninefold::Key)
+        .to receive(:create)
+        .with(app.id, 'ssh_key loc')
+
+      expect(Ninefold::Tunnel.new_with_key(app, 'ssh_key loc')).to be_instance_of Ninefold::Tunnel
+    end
+  end
+
   context "#run" do
     before { tunnel.run(command, 'arg1', 'arg2') }
 

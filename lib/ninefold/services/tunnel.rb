@@ -3,6 +3,12 @@ require "shellwords"
 
 module Ninefold
   class Tunnel
+
+    def self.new_with_key(app, public_key_location)
+      Ninefold::Key.create app.id, public_key_location
+      new app, public_key_location
+    end
+
     def initialize(app, public_key_location)
       @app        = app
       @public_key = Ninefold::Key.read(public_key_location)
@@ -51,5 +57,6 @@ module Ninefold
         block.call response[:ssh] || {}, response[:command]
       end
     end
+
   end
 end

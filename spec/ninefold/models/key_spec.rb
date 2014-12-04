@@ -3,10 +3,22 @@ require "spec_helper"
 describe "Ninefold::Key" do
   let(:key_file) { "~/.ssh/id_rsa.pub" }
   let(:key_data) { "rsa key data" }
+  let(:ssh_key)  { double(:ssh_key, private_key: 'private key', ssh_public_key: 'public key str') }
+  let(:host)     { Ninefold::Host.inst }
 
   before { allow(File).to receive(:exists?).with("#{Dir.home}/.ssh/id_rsa").and_return(true) }
   before { allow(File).to receive(:exists?).with("#{Dir.home}/.ssh/id_rsa.pub").and_return(true) }
   before { allow(File).to receive(:read).with("#{Dir.home}/.ssh/id_rsa.pub").and_return(key_data) }
+
+  describe ".create" do
+
+    it "generates keys and calls save api" do
+      expect(Ninefold::KeyGenerator).to receive(:create).and_return ssh_key
+
+      expect(Ninefold::Key.create('app_id', 'loc')).to eq ssh_key
+    end
+
+  end
 
   describe ".read" do
     let(:key) { Ninefold::Key.read(key_file) }
