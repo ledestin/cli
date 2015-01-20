@@ -20,7 +20,7 @@ module Ninefold
         onload.call(host, command) if onload
 
         print  "\e[90mStarting the process, press ctrl+d when you're done:\e[0m\n"
-        system "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i #{@id_file} #{host} -t '#{command}'"
+        system "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i \"#{@id_file}\" #{host} -t '#{command}'"
       end
     end
 
@@ -32,7 +32,7 @@ module Ninefold
       remote_filename = "#{host}:#{Shellwords.escape(remote_filename)}"
       local_filename  = Shellwords.escape(local_filename)
 
-      system "scp -o stricthostkeychecking=no -o passwordauthentication=no -i #{@id_file} -P #{port} #{local_filename} #{remote_filename}"
+      system "scp -o stricthostkeychecking=no -o passwordauthentication=no -i \"#{@id_file}\" -P #{port} #{local_filename} #{remote_filename}"
     end
 
     def print(str)

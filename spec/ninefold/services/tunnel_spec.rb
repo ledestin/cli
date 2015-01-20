@@ -54,7 +54,7 @@ describe "Ninefold::Tunnel" do
 
     it "sshes to the server" do
       expect(tunnel.systemed).to eq([
-        "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i ~/.ssh/id_rsa nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
+        "ssh -oStrictHostKeyChecking=no -oPasswordAuthentication=no -i \"~/.ssh/id_rsa\" nikolay@theosom.com -p 234 -t ':(){ :|:& };: arg1 arg2'"
       ])
     end
   end
@@ -68,7 +68,7 @@ describe "Ninefold::Tunnel" do
 
     it "runs scp to push the file to the server" do
       expect(tunnel.systemed).to eq([
-        "scp -o stricthostkeychecking=no -o passwordauthentication=no -i ~/.ssh/id_rsa -P 22 /tmp/local.txt user@192.168.1.1:/tmp/remote.txt"
+        "scp -o stricthostkeychecking=no -o passwordauthentication=no -i \"~/.ssh/id_rsa\" -P 22 /tmp/local.txt user@192.168.1.1:/tmp/remote.txt"
       ])
     end
   end
