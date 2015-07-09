@@ -101,7 +101,7 @@ module Ninefold
     def pick_app(&block)
       require_user
 
-      if app = app_from_dot_ninefold_file || app_from_env_id
+      if app = specified_app
         block.call app
       else
         load_apps do |apps|
@@ -171,5 +171,11 @@ module Ninefold
         end
       end
     end
+  end
+
+  private
+
+  def specified_app
+    app_from_dot_ninefold_file || app_from_env_id
   end
 end
