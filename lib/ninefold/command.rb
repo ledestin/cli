@@ -104,7 +104,7 @@ module Ninefold
       app = specified_app || load_apps do |apps|
 
 	if apps.count > 1
-	  ask_user_to_specify_app
+	  ask_user_to_specify_app(apps)
 	elsif apps.count == 1
 	  say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
 	  apps.first
@@ -170,7 +170,7 @@ module Ninefold
 
   private
 
-  def ask_user_to_specify_app
+  def ask_user_to_specify_app(apps)
     if app = interaction(:pickapp, apps)
       save_app_in_dot_ninefold_file(app)
       app
