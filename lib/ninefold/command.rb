@@ -101,21 +101,19 @@ module Ninefold
     def pick_app
       require_user
 
-      if app = specified_app
-        yield app
-      else
-        load_apps do |apps|
+      app = specified_app || load_apps do |apps|
 
-          if apps.count > 1
-	    yield app if app = ask_user_to_specify_app
-          elsif apps.count == 1
-            say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
-            yield apps.first
-          else
-            puts "You don't have any apps"
-          end
-        end
+	if apps.count > 1
+	  ask_user_to_specify_app
+	elsif apps.count == 1
+	  say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
+	  apps.first
+	else
+	  puts "You don't have any apps"
+	end
       end
+
+      yield app if app
     end
 
     def run_app_command(name, *args, &block)
