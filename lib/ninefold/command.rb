@@ -98,22 +98,22 @@ module Ninefold
       end
     end
 
-    def pick_app(&block)
+    def pick_app
       require_user
 
       if app = specified_app
-        block.call app
+        yield app
       else
         load_apps do |apps|
 
           if apps.count > 1
             if app = interaction(:pickapp, apps)
               save_app_in_dot_ninefold_file(app)
-              block.call app
+              yield app
             end
           elsif apps.count == 1
             say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
-            block.call apps.first
+            yield apps.first
           else
             puts "You don't have any apps"
           end
