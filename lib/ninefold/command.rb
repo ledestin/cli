@@ -106,7 +106,7 @@ module Ninefold
 
 	if apps.many?
 	  ask_user_to_specify_app(apps)
-	elsif apps.count == 1
+	elsif apps.one?
 	  auto_select_the_only_app(apps)
 	else
 	  puts "You don't have any apps"
