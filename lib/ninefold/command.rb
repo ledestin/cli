@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 require "thor"
+require "active_support/core_ext/enumerable"
 
 module Ninefold
   class Command < Thor
@@ -103,7 +104,7 @@ module Ninefold
 
       app = user_specified_app || load_apps do |apps|
 
-	if apps.count > 1
+	if apps.many?
 	  ask_user_to_specify_app(apps)
 	elsif apps.count == 1
 	  auto_select_the_only_app(apps)
