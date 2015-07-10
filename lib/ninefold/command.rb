@@ -177,8 +177,9 @@ module Ninefold
   end
 
   def auto_select_the_only_app(apps)
-    say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
-    apps.first
+    selected_app = apps.first
+    say "▸ You have only one app (#{selected_app.name}) proceeding...", :yellow
+    selected_app
   end
 
   def user_specified_app
