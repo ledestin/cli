@@ -106,8 +106,7 @@ module Ninefold
 	if apps.count > 1
 	  ask_user_to_specify_app(apps)
 	elsif apps.count == 1
-	  say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
-	  apps.first
+	  auto_select_the_only_app(apps)
 	else
 	  puts "You don't have any apps"
 	end
@@ -175,6 +174,11 @@ module Ninefold
       save_app_in_dot_ninefold_file(app)
       app
     end
+  end
+
+  def auto_select_the_only_app(apps)
+    say "▸ You have only one app (#{apps[0].name}) proceeding...", :yellow
+    apps.first
   end
 
   def specified_app
