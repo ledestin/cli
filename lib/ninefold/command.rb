@@ -101,7 +101,7 @@ module Ninefold
     def pick_app
       require_user
 
-      app = specified_app || load_apps do |apps|
+      app = user_specified_app || load_apps do |apps|
 
 	if apps.count > 1
 	  ask_user_to_specify_app(apps)
@@ -181,7 +181,7 @@ module Ninefold
     apps.first
   end
 
-  def specified_app
+  def user_specified_app
     app_from_dot_ninefold_file || app_from_env_id
   end
 end
